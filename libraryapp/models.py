@@ -14,15 +14,28 @@ class BaseModel(db.Model):
     id = Column(Integer, primary_key=True, autoincrement=True)
     active = Column(Boolean, default=True)
 
-class Reader(BaseModel, UserMixin):
-    __tablename__ = "reader"
+class UserRole(enum.Enum):
+    ADMIN = 1
+    READER = 2
+
+class User(BaseModel, UserMixin):
+    __tablename__ = 'user'
 
     name = Column(String(50), nullable=False)
     phone = Column(String(10), nullable=False)
     email = Column(String(100), nullable=True)
     username = Column(String(50), nullable=False, unique=True)
     password = Column(String(50), nullable=False)
+    user_role = Column(Enum(UserRole), default=UserRole.READER)
+    reader = relationship("Reader", backref="user", uselist=False)
 
+    def __str__(self):
+        return self.name
+
+class Reader(BaseModel):
+    __tablename__ = "reader"
+
+    id = Column(Integer, ForeignKey('user.id'), primary_key=True)
     borrow_slips = relationship("BorrowSlip", backref="reader", lazy=True)
 
     def __str__(self):
@@ -50,9 +63,7 @@ class BorrowSlip(BaseModel):
     borrow_date = Column(DateTime, default=datetime.now())
     due_date = Column(DateTime, nullable=False)
 
-    borrow_slip_details = relationship("BorrowSlipDetail",mbackref="borrow_slip",
-                                       lazy=True,
-                                       cascade="CASCADE")
+    borrow_slip_details = relationship("BorrowSlipDetail", lazy=True)
 
 class BorrowSlipDetail(BaseModel):
     __tablename__ = "borrow_slip_detail"
@@ -87,12 +98,12 @@ def insert_books():
             db.session.add(Book(**b))
         db.session.commit()
 
-def create_user_base(name, phone, email, username, password):
+def create_user_base(name, phone, email, username, password, role):
     password = hash_password(password)
-    reader = Reader(name=name, phone=phone, email=email, username=username, password=password)
-    db.session.add(reader)
+    user = User(name=name, phone=phone, email=email, username=username, password=password, user_role=role)
+    db.session.add(user)
     db.session.flush()
-    return reader
+    return user
 
 def init_all_data():
     with app.app_context():
@@ -101,7 +112,7 @@ def init_all_data():
 
     insert_books()
     with app.app_context():
-        create_user_base("Nguyễn Thanh Thuận", "0334903055","thuan@gmail.com", "admin", "123")
+        create_user_base("Nguyễn Thanh Thuận", "0334903055","thuan@gmail.com", "admin", "123", UserRole.ADMIN)
         db.session.commit()
 
 
