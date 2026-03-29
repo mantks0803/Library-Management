@@ -1,11 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Trang chủ</title>
-</head>
-<body>
-    <h1>Library-app</h1>
-    <h2>{{ msg }}</h2>
-</body>
-</html>
+{% extends 'layout/base.html' %}
+
+{% block title %}Tra cứu sách - Thư viện OU{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-3">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold text-primary text-uppercase mb-0 border-start border-5 border-primary ps-3">
+            HỆ THỐNG TRA CỨU & LỌC SÁCH
+        </h4>
+    </div>
+
+    <div class="card card-modern p-4 mb-5 border-0">
+        <form action="/" method="GET">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-9">
+                    <div class="input-group input-group-lg shadow-sm">
+                        <span class="input-group-text bg-white border-primary text-primary"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" class="form-control border-primary" placeholder="Nhập tên sách cần tìm (tối thiểu 2 ký tự)..." name="keyword">
+                    </div>
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button class="btn btn-primary btn-lg fw-bold flex-grow-1 shadow-sm" type="submit">TÌM KIẾM</button>
+                    <button class="btn btn-outline-secondary btn-lg shadow-sm" type="button" data-bs-toggle="collapse" href="#advancedFilter" aria-expanded="false">
+                        <i class="fa-solid fa-sliders"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="collapse mt-4" id="advancedFilter">
+                <div class="row g-3 bg-light p-4 rounded-3 border">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-secondary">Tên tác giả</label>
+                        <input type="text" class="form-control form-control-lg" placeholder="Nhập tên tác giả..." name="author">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold text-secondary">Thể loại</label>
+                        <select class="form-select form-select-lg" name="category">
+                            <option value="">-- Tất cả thể loại --</option>
+                            <option value="cntt">Công nghệ thông tin</option>
+                            <option value="vanhoc">Văn học</option>
+                            <option value="kinhte">Kinh tế</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <h5 class="fw-bold text-primary text-uppercase mb-4 border-start border-5 border-warning ps-3">
+        Sách có thể bạn quan tâm
+    </h5>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+
+        <div class="col">
+            <div class="card book-card h-100 shadow-sm">
+                <div class="book-thumbnail fs-1"><i class="fa-solid fa-book-journal-whills"></i></div>
+                <div class="card-body text-center d-flex flex-column p-4">
+                    <h5 class="fw-bold mb-2">Frieren: Beyond Journey's End</h5>
+                    <p class="text-muted mb-3">Thể loại: Truyện tranh</p>
+                    <button class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card book-card h-100 shadow-sm">
+                <div class="book-thumbnail fs-1"><i class="fa-solid fa-code"></i></div>
+                <div class="card-body text-center d-flex flex-column p-4">
+                    <h5 class="fw-bold mb-2">Lập trình Python và Flask</h5>
+                    <p class="text-muted mb-3">Thể loại: Công nghệ thông tin</p>
+                    <button class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card book-card h-100 shadow-sm">
+                <div class="book-thumbnail fs-1"><i class="fa-solid fa-dragon"></i></div>
+                <div class="card-body text-center d-flex flex-column p-4">
+                    <h5 class="fw-bold mb-2">Truyền thuyết Bạch Xà</h5>
+                    <p class="text-muted mb-3">Thể loại: Văn học thần thoại</p>
+                    <button class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card book-card h-100 shadow-sm">
+                <div class="book-thumbnail fs-1"><i class="fa-solid fa-server"></i></div>
+                <div class="card-body text-center d-flex flex-column p-4">
+                    <h5 class="fw-bold mb-2">Cấu trúc dữ liệu và Giải thuật</h5>
+                    <p class="text-muted mb-3">Thể loại: Công nghệ thông tin</p>
+                    <button class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card book-card h-100 shadow-sm">
+                <div class="book-thumbnail fs-1"><i class="fa-solid fa-feather"></i></div>
+                <div class="card-body text-center d-flex flex-column p-4">
+                    <h5 class="fw-bold mb-2">Tiếng chim hót trong bụi mận gai</h5>
+                    <p class="text-muted mb-3">Thể loại: Văn học phương Tây</p>
+                    <button class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card book-card h-100 shadow-sm">
+                <div class="book-thumbnail fs-1"><i class="fa-solid fa-chart-line"></i></div>
+                <div class="card-body text-center d-flex flex-column p-4">
+                    <h5 class="fw-bold mb-2">Kinh tế học vĩ mô</h5>
+                    <p class="text-muted mb-3">Thể loại: Kinh tế học</p>
+                    <button class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <nav aria-label="Page navigation" class="mt-4 mb-5">
+        <ul class="pagination justify-content-center shadow-sm" style="border-radius: 8px; overflow: hidden;">
+            <li class="page-item disabled">
+                <a class="page-link py-2 px-3 fw-bold" href="#" tabindex="-1" aria-disabled="true"><</a>
+            </li>
+            <li class="page-item active"><a class="page-link py-2 px-3 fw-bold" href="#">1</a></li>
+            <li class="page-item"><a class="page-link py-2 px-3 fw-bold" href="#">2</a></li>
+            <li class="page-item"><a class="page-link py-2 px-3 fw-bold" href="#">3</a></li>
+            <li class="page-item"><a class="page-link py-2 px-3 fw-bold text-muted" href="#">...</a></li>
+            <li class="page-item">
+                <a class="page-link py-2 px-3 fw-bold" href="#">></a>
+            </li>
+        </ul>
+    </nav>
+
+</div>
+{% endblock %}
