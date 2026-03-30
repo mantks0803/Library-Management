@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - Thư viện OU</title>
+    <link rel="icon" href="https://res.cloudinary.com/dmhnfoc9i/image/upload/v1774794944/book_x3tz99.png" type="image/png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        body { background-color: #f4f7f6; display: flex; flex-direction: column; min-height: 100vh; margin: 0; }
+        .main-container { flex-grow: 1; display: flex; align-items: center; justify-content: center; }
+        .login-box { width: 100%; max-width: 400px; }
+    </style>
+</head>
+<body>
+
+{% include 'layout/header.html' %}
+
+<div class="main-container">
+    <div class="login-box">
+        <div class="text-center mb-4">
+            <img src="https://res.cloudinary.com/dmhnfoc9i/image/upload/v1774794944/book_x3tz99.png" alt="Logo Thư Viện" width="80" class="mb-3">
+            <h3 class="fw-bold text-primary">THƯ VIỆN OU</h3>
+            <p class="text-muted">Hệ thống Quản lý Mượn/Trả Sách</p>
+        </div>
+
+        <div class="card card-modern p-4">
+
+            {% if err_msg %}
+            <div class="alert alert-danger text-center fw-bold" role="alert">
+                <i class="fa-solid fa-triangle-exclamation"></i> {{ err_msg }}
+            </div>
+            {% endif %}
+
+            <form action="/login" method="POST">
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-secondary">Tên đăng nhập </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white text-primary"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" name="username" class="form-control" placeholder="Nhập tài khoản..." required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-secondary">Mật khẩu</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white text-primary"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" name="password" class="form-control" placeholder="Nhập mật khẩu..." required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" style="border-radius: 8px;">
+                    ĐĂNG NHẬP <i class="fa-solid fa-arrow-right-to-bracket ms-1"></i>
+                </button>
+            </form>
+
+            <div class="text-center mt-4">
+                <span class="text-muted">Chưa có tài khoản?</span>
+                <a href="/register" class="text-primary fw-bold text-decoration-none">Đăng ký ngay</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'layout/footer.html' %}
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
