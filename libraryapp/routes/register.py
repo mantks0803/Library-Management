@@ -8,22 +8,22 @@ register_bp = Blueprint("register", __name__)
 
 @register_bp.route("/register", methods=["GET"])
 def register_view():
-    return render_template("register.html")
+    return render_template("auth/register.html")
 
 @register_bp.route("/register", methods=["POST"])
 def register_process():
     username = request.form.get("username")
     if not libraryapp.dao.users.validate_username(username):
-        return render_template("register.html", err_msg="Tên đăng nhập đã tồn tại vui lòng chọn tên khác!")
+        return render_template("auth/register.html", err_msg="Tên đăng nhập đã tồn tại vui lòng chọn tên khác!")
 
     phone = request.form.get("phone")
     if not libraryapp.dao.users.validate_phone(phone):
-        return render_template("register.html", err_msg="Số điện thoạt không hợp lệ vui lòng nhập lại!")
+        return render_template("auth/register.html", err_msg="Số điện thoạt không hợp lệ vui lòng nhập lại!")
 
     password = request.form.get("password")
     confirm = request.form.get("confirm")
     if not libraryapp.dao.users.validate_password(password, confirm):
-        return render_template("register.html", err_msg="Mật khẩu không khớp vui lòng nhập lại!")
+        return render_template("auth/register.html", err_msg="Mật khẩu không khớp vui lòng nhập lại!")
 
     name = request.form.get("name")
 

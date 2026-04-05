@@ -7,7 +7,7 @@ login_logout_bp = Blueprint('login_logout', __name__)
 
 @login_logout_bp.route('/login')
 def render_login():
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 @login_logout_bp.route('/logout')
 def logout_process():
@@ -24,4 +24,4 @@ def login_process():
         next = request.args.get('next')
         return redirect(next if next else '/')
     else:
-        return render_template('login.html', err_msg="Tên đăng nhập hoặc mật khẩu không chính xác!")
+        return render_template('auth/login.html', err_msg="Tên đăng nhập hoặc mật khẩu không chính xác!")
