@@ -1,0 +1,70 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Xác nhận mượn sách{% endblock %}
+
+{% block content %}
+<div class="container py-5 d-flex justify-content-center">
+    <div class="card border-0 shadow-lg" style="width: 100%; max-width: 600px; border-radius: 16px;">
+        
+        <div class="text-white text-center py-4" style="background: linear-gradient(90deg, #0d6efd 0%, #0043a8 100%); border-radius: 16px 16px 0 0;">
+            <i class="fa-solid fa-file-invoice mb-2" style="font-size: 3rem;"></i>
+            <h4 class="fw-bold mb-0 letter-spacing-custom">PHIẾU XÁC NHẬN MƯỢN SÁCH</h4>
+            <small class="opacity-75">Hệ thống Thư viện Đại học Mở</small>
+        </div>
+
+        <div class="card-body p-5">
+            <h6 class="text-muted fw-bold text-uppercase mb-3"><i class="fa-solid fa-user-check me-2 text-primary"></i>Thông tin Độc giả</h6>
+            <div class="bg-light p-3 rounded-3 mb-4 border">
+                <div class="row mb-2">
+                    <div class="col-5 text-muted">Họ và tên:</div>
+                    <div class="col-7 fw-bold text-dark">{{ current_user.name }}</div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-5 text-muted">Mã tài khoản:</div>
+                    <div class="col-7 fw-medium">{{ current_user.username }}</div>
+                </div>
+                <div class="row">
+                    <div class="col-5 text-muted">Số điện thoại:</div>
+                    <div class="col-7 fw-medium">{{ current_user.phone }}</div>
+                </div>
+            </div>
+
+            <h6 class="text-muted fw-bold text-uppercase mb-3"><i class="fa-solid fa-book me-2 text-primary"></i>Thông tin Sách mượn</h6>
+            <div class="bg-light p-3 rounded-3 mb-4 border">
+                <h5 class="fw-bold text-primary mb-1">{{ book.title }}</h5>
+                <p class="text-muted small mb-0">Tác giả: {{ book.author }} &bull; Thể loại: {{ book.type }}</p>
+            </div>
+
+            <h6 class="text-muted fw-bold text-uppercase mb-3"><i class="fa-solid fa-calendar-days me-2 text-primary"></i>Chi tiết thời gian</h6>
+            <div class="d-flex justify-content-between p-3 rounded-3" style="background-color: #f8f9fa; border: 2px dashed #dee2e6;">
+                <div class="text-center">
+                    <small class="text-muted d-block mb-1">Ngày mượn</small>
+                    <span class="fw-bold text-success fs-5"><i class="fa-solid fa-calendar-check me-1"></i> {{ borrow_date }}</span>
+                </div>
+                <div class="text-center align-self-center text-muted">
+                    <i class="fa-solid fa-arrow-right-long fs-4"></i>
+                    <div class="small fw-bold">7 ngày</div>
+                </div>
+                <div class="text-center">
+                    <small class="text-muted d-block mb-1">Hạn trả</small>
+                    <span class="fw-bold text-danger fs-5"><i class="fa-solid fa-calendar-xmark me-1"></i> {{ due_date }}</span>
+                </div>
+            </div>
+
+            <hr class="my-4" style="border-top: 2px dashed #adb5bd;">
+
+            <div class="d-flex gap-3">
+                <a href="/book/{{ book.id }}" class="btn btn-light fw-bold py-3 px-4 rounded-pill border">Hủy</a>
+                
+                <button class="btn btn-primary fw-bold py-3 flex-grow-1 rounded-pill shadow-sm" style="font-size: 1.1rem;">
+                    <i class="fa-solid fa-check-circle me-2"></i> XÁC NHẬN MƯỢN SÁCH
+                </button>
+            </div>
+            
+            <div class="text-center mt-3">
+                <small class="text-muted fst-italic">Bằng việc xác nhận, bạn đồng ý với quy định mượn/trả của thư viện.</small>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
