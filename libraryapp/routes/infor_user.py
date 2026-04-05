@@ -17,7 +17,7 @@ def render_user():
     page = int(request.args.get("page", 1))
     readers = get_list_readers(page=page)
     pages = math.ceil(count_readers() / app.config['PAGE_SIZE'])
-    return render_template("reader/reader.html", user=user, readers=readers, pages=pages)
+    return render_template("auth/profile.html", user=user, readers=readers, pages=pages)
 
 @infor_user_bp.route('/user/infor', methods=['GET'])
 @permission()
