@@ -1,0 +1,88 @@
+body {
+    background-color: #f4f7f6;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    margin: 0;
+}
+
+#mainContent {
+    flex-grow: 1; /* Đẩy footer xuống đáy trang */
+}
+
+/* header và footer đã được set màu trực tiếp trong html để chống lỗi cache */
+.navbar-custom {
+    padding: 12px 0;
+    z-index: 1010;
+}
+
+.footer-custom {
+    z-index: 999;
+}
+
+.letter-spacing-custom {
+    letter-spacing: 0.5px;
+}
+
+.dropdown-menu-custom {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 10px 0;
+}
+.dropdown-menu-custom .dropdown-item {
+    padding: 10px 20px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+.dropdown-menu-custom .dropdown-item:hover {
+    background-color: #f8f9fa;
+    color: #0d6efd;
+}
+
+/*login-register*/
+.main-container {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+}
+.login-box { width: 100%; max-width: 400px; }
+.register-box { width: 100%; max-width: 600px; }
+
+.card-modern {
+    border-radius: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    background-color: #ffffff;
+}
+
+/* Hiệu ứng thẻ sách (Card) */
+.book-card {
+    border: 1px solid #edf2f7 !important;
+    border-radius: 12px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.book-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(13, 110, 253, 0.1) !important;
+    border-color: #cbe0ff !important;
+}
+.book-thumbnail {
+    height: 220px;
+    background-color: #f8f9fa;
+    border-radius: 12px 12px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #dee2e6;
+    border-bottom: 1px solid #f1f3f5;
+}
+
+/* Phân trang (Pagination) */
+.pagination-custom {
+    border-radius: 8px;
+    overflow: hidden;
+}

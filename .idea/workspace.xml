@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2b5d81b2-eb0b-42c8-ac14-5eca047f322d" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/libraryapp/templates/auth/profile.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/dao/users.py" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/dao/users.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/index.py" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/index.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/routes/login_logout.py" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/routes/login_logout.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/routes/register.py" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/routes/register.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/templates/auth/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/templates/auth/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/templates/auth/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/templates/auth/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/templates/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/templates/layout/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/templates/layout/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/templates/layout/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/templates/layout/footer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/templates/layout/header.html" beforeDir="false" afterPath="$PROJECT_DIR$/libraryapp/templates/layout/header.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/libraryapp/test_ui.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/static/css/style.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="3BciDUiDbmwXXfFGVlIpwG8xGND" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.index.executor": "Run",
+    "Python.test_ui.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "UI__login__register",
+    "last_opened_file_path": "C:/Users/nguye/OneDrive/Desktop/Kiểm thử/Library-Management",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\nguye\OneDrive\Desktop\Kiểm thử\Library-Management\libraryapp" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.index">
+    <configuration name="index" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Library-Management" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/libraryapp" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/libraryapp/index.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test_ui" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="Library-Management" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/libraryapp" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/libraryapp/test_ui.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.index" />
+        <item itemvalue="Python.test_ui" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-164cda30dcd9-0af03a5fa574-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-252.26830.99" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2b5d81b2-eb0b-42c8-ac14-5eca047f322d" name="Changes" comment="" />
+      <created>1774794639789</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1774794639789</updated>
+    </task>
+    <servers />
+  </component>
+</project>
