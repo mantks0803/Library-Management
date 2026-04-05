@@ -1,0 +1,75 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Đăng ký - Thư viện OU{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center w-100" style="min-height: 80vh;">
+    
+    <div style="width: 100%; max-width: 650px;">
+        <div class="card card-modern p-4 border-0 shadow-lg">
+            <div class="text-center mb-4">
+                <img src="https://res.cloudinary.com/dmhnfoc9i/image/upload/v1774794944/book_x3tz99.png" alt="Logo Thư Viện" width="60" class="mb-3">
+                <h4 class="fw-bold text-primary">ĐĂNG KÝ TÀI KHOẢN</h4>
+                <p class="text-muted mb-0">Tham gia hệ thống mượn trả sách thư viện</p>
+            </div>
+
+            {% if err_msg %}
+            <div class="alert alert-danger text-center fw-bold" role="alert">
+                <i class="fa-solid fa-circle-xmark"></i> {{ err_msg }}
+            </div>
+            {% endif %}
+
+            <form action="/register" method="POST">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-secondary">Họ và Tên</label>
+                        <input type="text" name="name" class="form-control bg-light" placeholder="......" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-secondary">Số điện thoại</label>
+                        <input type="text" name="phone" class="form-control bg-light" placeholder="......." required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-secondary">Tên đăng nhập</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-primary border-end-0"><i class="fa-solid fa-id-card"></i></span>
+                            <input type="text" name="username" class="form-control bg-light border-start-0" placeholder="Username..." required>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-secondary">Email</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-primary border-end-0"><i class="fa-solid fa-envelope"></i></span>
+                            <input type="email" name="email" class="form-control bg-light border-start-0" placeholder="@gmail.com" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label fw-bold text-secondary">Mật khẩu</label>
+                        <input type="password" name="password" class="form-control bg-light" placeholder="Tạo mật khẩu..." required>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <label class="form-label fw-bold text-secondary">Xác nhận mật khẩu</label>
+                        <input type="password" name="confirm" class="form-control bg-light" placeholder="Nhập lại mật khẩu..." required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" style="border-radius: 8px;">
+                    HOÀN TẤT ĐĂNG KÝ
+                </button>
+            </form>
+
+            <div class="text-center mt-3">
+                <span class="text-muted">Đã có tài khoản?</span>
+                <a href="/login" class="text-primary fw-bold text-decoration-none">Đăng nhập ngay</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

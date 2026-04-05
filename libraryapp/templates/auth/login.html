@@ -1,0 +1,59 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Đăng nhập - Thư viện OU{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center w-100" style="min-height: 75vh;">
+    
+    <div style="width: 100%; max-width: 420px;">
+        <div class="text-center mb-4">
+            <img src="https://res.cloudinary.com/dmhnfoc9i/image/upload/v1774794944/book_x3tz99.png" alt="Logo Thư Viện" width="80" class="mb-3">
+            <h3 class="fw-bold text-primary">THƯ VIỆN OU</h3>
+            <p class="text-muted">Hệ thống Quản lý Mượn/Trả Sách</p>
+        </div>
+
+        <div class="card card-modern p-4 border-0 shadow-lg">
+
+            {% if err_msg %}
+            <div class="alert alert-danger text-center fw-bold" role="alert">
+                <i class="fa-solid fa-triangle-exclamation"></i> {{ err_msg }}
+            </div>
+            {% endif %}
+
+            {% if request.args.get('success') %}
+            <div class="alert alert-success text-center fw-bold" role="alert">
+                <i class="fa-solid fa-circle-check"></i> Đăng ký thành công! Vui lòng đăng nhập.
+            </div>
+            {% endif %}
+
+            <form action="/login" method="POST">
+                <div class="mb-3">
+                    <label class="form-label fw-bold text-secondary">Tên đăng nhập </label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-primary border-end-0"><i class="fa-solid fa-user"></i></span>
+                        <input type="text" name="username" class="form-control border-start-0 bg-light" placeholder="Nhập tài khoản..." required>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-secondary">Mật khẩu</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light text-primary border-end-0"><i class="fa-solid fa-lock"></i></span>
+                        <input type="password" name="password" class="form-control border-start-0 bg-light" placeholder="Nhập mật khẩu..." required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" style="border-radius: 8px;">
+                    ĐĂNG NHẬP <i class="fa-solid fa-arrow-right-to-bracket ms-1"></i>
+                </button>
+            </form>
+
+            <div class="text-center mt-4">
+                <span class="text-muted">Chưa có tài khoản?</span>
+                <a href="/register" class="text-primary fw-bold text-decoration-none">Đăng ký ngay</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
