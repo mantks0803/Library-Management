@@ -14,7 +14,7 @@
                     <i class="fa-solid fa-circle-user fs-5 align-middle me-2"></i> {{ current_user.name }}
                 </a>
 
-                <ul class="dropdown-menu dropdown-menu-end shadow-lg mt-2" style="border: none; border-radius: 12px; padding: 10px 0;">
+                <ul class="dropdown-menu dropdown-menu-end shadow-lg mt-2" style="border: none; border-radius: 12px; padding: 10px 0; min-width: 220px;">
                     <li><h6 class="dropdown-header text-muted">CHỨC NĂNG</h6></li>
 
                     <li>
@@ -22,21 +22,22 @@
                             <i class="fa-solid fa-address-card text-primary me-2"></i> Hồ sơ cá nhân
                         </a>
                     </li>
-                     <li>
-                        <a class="dropdown-item py-2 fw-medium" href="/profile">
-                            <i class="fa-solid fa-rotate-right text-primary me-2"></i>Lịch sử Mượn/Trả
-                        </a>
-                    </li>
+
                     <li>
-                        <a class="dropdown-item py-2 fw-medium" href="/profile">
-                            <i class="fa-solid fa-key text-primary me-2"></i>Đổi mật khẩu
+                        <a class="dropdown-item py-2 fw-medium" href="#">
+                            <i class="fa-solid fa-clock-rotate-left text-primary me-2"></i> Lịch sử Mượn/Trả
                         </a>
                     </li>
 
+                    <li>
+                        <a class="dropdown-item py-2 fw-medium" href="#">
+                            <i class="fa-solid fa-key text-primary me-2"></i> Đổi mật khẩu
+                        </a>
+                    </li>
 
                     {% if current_user.user_role.name == 'ADMIN' %}
                     <li>
-                        <a class="dropdown-item py-2 fw-medium" href="/admin">
+                        <a class="dropdown-item py-2 fw-medium bg-light" href="/admin">
                             <i class="fa-solid fa-gear text-warning me-2"></i> Trang Quản Trị
                         </a>
                     </li>
