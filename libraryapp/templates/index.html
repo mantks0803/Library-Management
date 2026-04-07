@@ -36,11 +36,11 @@
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold text-secondary">Thể loại</label>
-                        <select class="form-select form-select-lg" name="category">
+                        <select class="form-select form-select-lg" name="type">
                             <option value="">-- Tất cả thể loại --</option>
-                            <option value="cntt">Công nghệ thông tin</option>
-                            <option value="vanhoc">Văn học</option>
-                            <option value="kinhte">Kinh tế</option>
+                            {% for type in types %}
+                            <option value="{{ type }}">{{ type }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -52,90 +52,43 @@
         Sách có thể bạn quan tâm
     </h5>
 
+    {% if books %}
     <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
-
+        {% for book in books %}
         <div class="col">
             <div class="card book-card h-100 shadow-sm">
                 <div class="book-thumbnail fs-1"><i class="fa-solid fa-book-journal-whills"></i></div>
                 <div class="card-body text-center d-flex flex-column p-4">
-                    <h5 class="fw-bold mb-2">Frieren: Beyond Journey's End</h5>
-                    <p class="text-muted mb-3">Thể loại: Truyện tranh</p>
-                    <a href="/book/1" class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</a>
+                    <h5 class="fw-bold mb-2">{{ book.title }}</h5>
+                    <p class="text-muted mb-1">Tác giả: {{ book.author }}</p>
+                    <p class="text-muted mb-3">Thể loại: {{ book.type }}</p>
+                    <button class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill" onclick="window.location.href='/reader/book-detail/{{ book.id }}'">Xem chi tiết</button>
                 </div>
             </div>
         </div>
-
-        <div class="col">
-            <div class="card book-card h-100 shadow-sm">
-                <div class="book-thumbnail fs-1"><i class="fa-solid fa-code"></i></div>
-                <div class="card-body text-center d-flex flex-column p-4">
-                    <h5 class="fw-bold mb-2">Lập trình Python và Flask</h5>
-                    <p class="text-muted mb-3">Thể loại: Công nghệ thông tin</p>
-                    <a href="/book/2" class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card book-card h-100 shadow-sm">
-                <div class="book-thumbnail fs-1"><i class="fa-solid fa-dragon"></i></div>
-                <div class="card-body text-center d-flex flex-column p-4">
-                    <h5 class="fw-bold mb-2">Truyền thuyết Bạch Xà</h5>
-                    <p class="text-muted mb-3">Thể loại: Văn học thần thoại</p>
-                    <a href="/book/3" class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card book-card h-100 shadow-sm">
-                <div class="book-thumbnail fs-1"><i class="fa-solid fa-server"></i></div>
-                <div class="card-body text-center d-flex flex-column p-4">
-                    <h5 class="fw-bold mb-2">Cấu trúc dữ liệu và Giải thuật</h5>
-                    <p class="text-muted mb-3">Thể loại: Công nghệ thông tin</p>
-                    <a href="/book/4" class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card book-card h-100 shadow-sm">
-                <div class="book-thumbnail fs-1"><i class="fa-solid fa-feather"></i></div>
-                <div class="card-body text-center d-flex flex-column p-4">
-                    <h5 class="fw-bold mb-2">Tiếng chim hót trong bụi mận gai</h5>
-                    <p class="text-muted mb-3">Thể loại: Văn học phương Tây</p>
-                    <a href="/book/5" class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card book-card h-100 shadow-sm">
-                <div class="book-thumbnail fs-1"><i class="fa-solid fa-chart-line"></i></div>
-                <div class="card-body text-center d-flex flex-column p-4">
-                    <h5 class="fw-bold mb-2">Kinh tế học vĩ mô</h5>
-                    <p class="text-muted mb-3">Thể loại: Kinh tế học</p>
-                    <a href="/book/6" class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill">Xem chi tiết</a>
-                </div>
-            </div>
-        </div>
-
+        {% endfor %}
     </div>
 
     <nav aria-label="Page navigation" class="mt-4 mb-5">
         <ul class="pagination justify-content-center shadow-sm pagination-custom">
-            <li class="page-item disabled">
-                <a class="page-link py-2 px-3 fw-bold" href="#" tabindex="-1" aria-disabled="true"><</a>
+            <li class="page-item {% if current_page <= 1 %}disabled{% endif %}">
+                <a class="page-link py-2 px-3 fw-bold" href="/?page=1" tabindex="-1" aria-disabled="true">&lt;</a>
             </li>
-            <li class="page-item active"><a class="page-link py-2 px-3 fw-bold" href="#">1</a></li>
-            <li class="page-item"><a class="page-link py-2 px-3 fw-bold" href="#">2</a></li>
-            <li class="page-item"><a class="page-link py-2 px-3 fw-bold" href="#">3</a></li>
-            <li class="page-item"><a class="page-link py-2 px-3 fw-bold text-muted" href="#">...</a></li>
-            <li class="page-item">
-                <a class="page-link py-2 px-3 fw-bold" href="#">></a>
+            {% for page_num in range(1, pages + 1) %}
+            <li class="page-item {% if current_page == page_num %}active{% endif %}">
+                <a class="page-link py-2 px-3 fw-bold" href="/?page={{ page_num }}">{{ page_num }}</a>
+            </li>
+            {% endfor %}
+            <li class="page-item {% if current_page >= pages %}disabled{% endif %}">
+                <a class="page-link py-2 px-3 fw-bold" href="/?page={{ pages }}">&gt;</a>
             </li>
         </ul>
     </nav>
+    {% else %}
+    <div class="alert alert-danger mt-3 text-center">
+        Không có sách nào phù hợp!
+    </div>
+    {% endif %}
 
 </div>
 {% endblock %}
