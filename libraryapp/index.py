@@ -1,4 +1,4 @@
-from libraryapp.routes import home, login_logout, register, infor_user
+from libraryapp.routes import home, login_logout, register, infor_user, book_detail
 
 from libraryapp.api import api_users
 from libraryapp import app, login
@@ -13,6 +13,7 @@ def register_routes():
     app.register_blueprint(login_logout.login_logout_bp)
     app.register_blueprint(register.register_bp)
     app.register_blueprint(infor_user.infor_user_bp)
+    app.register_blueprint(book_detail.book_bp)
 
 def register_api():
     app.register_blueprint(api_users.api_users_bp)

@@ -2,33 +2,33 @@ from flask import Blueprint, request
 from libraryapp import login
 from flask import render_template
 from libraryapp.dao.users import get_current_user
-from libraryapp.dao.books import get_list_books, count_books
+from libraryapp import app
 import math
+from libraryapp.dao import books
 
 home_bp = Blueprint('home', __name__)
 
 
 @home_bp.route('/')
 def home():
-    page = request.args.get('page', 1, type=int)
-    keyword = request.args.get('keyword', '', type=str)
-    author = request.args.get('author', '', type=str)
-    type = request.args.get('type', '', type=str)
-    
-    # Lấy danh sách sách
-    books = get_list_books(keyword=keyword if keyword else None, 
-                           author=author if author else None, 
-                           type=type if type else None,
-                           page=page)
-    
-    # Đếm tổng số sách để tính số trang
-    total_books = count_books(keyword=keyword if keyword else None, 
-                              author=author if author else None, 
-                              type=type if type else None)
-    page_size = 6  # Số sách mỗi trang
-    pages = math.ceil(total_books / page_size)
-    
-    return render_template("index.html", books=books, pages=pages, current_page=page)
+    keyword = request.args.get("keyword")
+    author = request.args.get("author")
+    type = request.args.get("type")
+    page = int(request.args.get("page", 1))
+
+    data_books = books.get_list_books(
+        page=page,
+        keyword=keyword,
+        author=author,
+        type=type
+    )
+
+    page_size = app.config['PAGE_SIZE']
+    pages = math.ceil(books.count_books() / page_size) if books.count_books() > 0 else 1
+
+    types = books.get_all_book_types()
+
+    return render_template("index.html", books=data_books, pages=pages, types=types)
 
 
 @login.user_loader
