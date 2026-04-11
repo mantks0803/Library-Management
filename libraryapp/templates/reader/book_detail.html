@@ -36,19 +36,63 @@
                     <a href="/" class="btn btn-outline-secondary px-4 py-3 fw-bold rounded-pill">
                         <i class="fa-solid fa-arrow-left me-2"></i> Quay lại
                     </a>
-                    
+                    {% if current_user.is_authenticated %}
                     {% if book.quantity > 0 %}
-                    <a href="/borrow_confirm/{{ book.id }}" class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1" style="font-size: 1.1rem;">
-                        <i class="fa-solid fa-hand-holding-hand me-2"></i> ĐĂNG KÝ MƯỢN SÁCH
-                    </a>
+                    <button class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1" onclick="addToCart({{ book.id }}, '{{ book.title }}')" style="font-size: 1.1rem;">
+                        <i class="fa-solid fa-cart-plus me-2"></i> THÊM VÀO GIỎ MƯỢN
+                    </button>
                     {% else %}
                     <button class="btn btn-secondary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1" disabled>
                         SÁCH ĐÃ HẾT
                     </button>
                     {% endif %}
+                    {% else %}
+                    <a href="/login" class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1" style="font-size: 1.1rem;">
+                        <i class="fa-solid fa-arrow-right me-2"></i> ĐĂNG NHẬP ĐỂ MƯỢN
+                    </a>
+                    {% endif %}
                 </div>
+
             </div>
         </div>
     </div>
 </div>
+
+<script>
+function addToCart(bookId, bookTitle) {
+    fetch(`/cart/add/${bookId}`, { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${data.success ? 'success' : 'warning'} alert-dismissible fade show`;
+            alertDiv.role = 'alert';
+            alertDiv.innerHTML = `
+                <i class="fa-solid fa-${data.success ? 'check-circle' : 'exclamation-circle'} me-2"></i>
+                ${data.message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.card'));
+
+            if (data.success) {
+                updateCartCount();
+            }
+        });
+}
+
+function updateCartCount() {
+    fetch('/cart/count')
+        .then(res => res.json())
+        .then(data => {
+            // Cập nhật badge trong header nếu có
+            const badge = document.querySelector('#cart-badge');
+            if (badge) {
+                badge.textContent = data.count;
+                badge.style.display = data.count > 0 ? 'inline-block' : 'none';
+            }
+        });
+}
+
+// Cập nhật giỏ hàng khi trang tải
+document.addEventListener('DOMContentLoaded', updateCartCount);
+</script>
 {% endblock %}

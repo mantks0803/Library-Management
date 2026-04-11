@@ -1,0 +1,74 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Lịch sử Mượn/Trả - Thư viện OU{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold text-primary text-uppercase mb-0 border-start border-5 border-primary ps-3">
+            <i class="fa-solid fa-clock-rotate-left me-2"></i> LỊCH SỬ MƯỢN TRẢ SÁCH
+        </h4>
+        <a href="/" class="btn btn-outline-primary fw-bold rounded-pill">
+            <i class="fa-solid fa-book-open me-1"></i> Mượn thêm sách
+        </a>
+    </div>
+
+    <div class="card card-modern border-0 shadow-sm">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-secondary">
+                        <tr>
+                            <th class="ps-4 py-3 border-0">Mã phiếu</th>
+                            <th class="py-3 border-0">Tên sách</th>
+                            <th class="py-3 border-0">Ngày mượn</th>
+                            <th class="py-3 border-0">Hạn trả</th>
+                            <th class="py-3 border-0">Ngày trả thực tế</th>
+                            <th class="py-3 border-0 text-center">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if history_list %}
+                            {% for item in history_list %}
+                            <tr>
+                                <td class="ps-4 fw-bold text-muted">#{{ item.id }}</td>
+                                <td class="fw-bold text-primary">{{ item.book_title }}</td>
+                                <td class="text-secondary fw-medium">{{ item.borrow_date }}</td>
+                                <td class="text-secondary fw-medium">{{ item.due_date }}</td>
+                                <td>
+                                    {% if item.return_date %}
+                                        <span class="text-success fw-bold">{{ item.return_date }}</span>
+                                    {% else %}
+                                        <span class="text-muted fst-italic">Chưa trả</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-center">
+                                    {% if item.status == 'Đã trả' %}
+                                        <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-check me-1"></i> Đã trả</span>
+                                    {% elif item.status == 'Đang mượn' %}
+                                        <span class="badge bg-primary rounded-pill px-3 py-2"><i class="fa-solid fa-book-open-reader me-1"></i> Đang mượn</span>
+                                    {% else %}
+                                        <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fa-solid fa-triangle-exclamation me-1"></i> Quá hạn</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" class="text-center py-5">
+                                    <div class="text-muted opacity-75">
+                                        <i class="fa-solid fa-box-open mb-3" style="font-size: 3rem;"></i>
+                                        <p class="mb-0 fw-medium">Bạn chưa mượn cuốn sách nào!</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
