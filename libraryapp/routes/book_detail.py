@@ -5,7 +5,7 @@ from libraryapp import app
 from libraryapp.dao.users import get_current_user
 from libraryapp.dao.books import get_book
 
-book_bp = Blueprint('book', __name__)
+book_bp = Blueprint('book-detal', __name__)
 
 
 @book_bp.route('/book-detail/<int:id>', methods=['GET'])

@@ -6,17 +6,16 @@
 <div class="container py-5">
     <div class="card card-modern border-0 shadow-sm overflow-hidden">
         <div class="row g-0">
-            <div class="col-md-4 bg-light d-flex align-items-center justify-content-center border-end" style="min-height: 400px;">
+            <div class="col-md-4 bg-light d-flex align-items-center justify-content-center border-end"
+                 style="min-height: 400px;">
                 <i class="fa-solid fa-book-open text-primary opacity-25" style="font-size: 8rem;"></i>
             </div>
-            
+
             <div class="col-md-8 p-5">
                 <span class="badge bg-warning text-dark mb-3 px-3 py-2 rounded-pill fw-bold">{{ book.type }}</span>
                 <h2 class="fw-bold text-primary mb-3">{{ book.title }}</h2>
                 <h5 class="text-secondary mb-4"><i class="fa-solid fa-pen-nib me-2"></i>Tác giả: {{ book.author }}</h5>
-
                 <hr class="mb-4">
-
                 <div class="row mb-4">
                     <div class="col-sm-6 mb-3">
                         <div class="text-muted small fw-bold text-uppercase mb-1">Năm xuất bản</div>
@@ -25,20 +24,23 @@
                     <div class="col-sm-6 mb-3">
                         <div class="text-muted small fw-bold text-uppercase mb-1">Trạng thái kho</div>
                         {% if book.quantity > 0 %}
-                            <div class="fs-5 fw-bold text-success"><i class="fa-solid fa-circle-check me-1"></i> Còn {{ book.quantity }} cuốn</div>
+                        <div class="fs-5 fw-bold text-success"><i class="fa-solid fa-circle-check me-1"></i> Còn {{
+                            book.quantity }} cuốn
+                        </div>
                         {% else %}
-                            <div class="fs-5 fw-bold text-danger"><i class="fa-solid fa-circle-xmark me-1"></i> Đã hết sách</div>
+                        <div class="fs-5 fw-bold text-danger"><i class="fa-solid fa-circle-xmark me-1"></i> Đã hết sách
+                        </div>
                         {% endif %}
                     </div>
                 </div>
-
                 <div class="d-flex gap-3 mt-5">
                     <a href="/" class="btn btn-outline-secondary px-4 py-3 fw-bold rounded-pill">
                         <i class="fa-solid fa-arrow-left me-2"></i> Quay lại
                     </a>
                     {% if current_user.is_authenticated %}
                     {% if book.quantity > 0 %}
-                    <button class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1" onclick="addToCart({{ book.id }}, '{{ book.title }}')" style="font-size: 1.1rem;">
+                    <button class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1"
+                            onclick="addToCart({{ book.id }}, '{{ book.title }}')" style="font-size: 1.1rem;">
                         <i class="fa-solid fa-cart-plus me-2"></i> THÊM VÀO GIỎ MƯỢN
                     </button>
                     {% else %}
@@ -47,52 +49,15 @@
                     </button>
                     {% endif %}
                     {% else %}
-                    <a href="/login" class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1" style="font-size: 1.1rem;">
+                    <a href="/login" class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1"
+                       style="font-size: 1.1rem;">
                         <i class="fa-solid fa-arrow-right me-2"></i> ĐĂNG NHẬP ĐỂ MƯỢN
                     </a>
                     {% endif %}
                 </div>
-
             </div>
         </div>
     </div>
 </div>
-
-<script>
-function addToCart(bookId, bookTitle) {
-    fetch(`/cart/add/${bookId}`, { method: 'POST' })
-        .then(res => res.json())
-        .then(data => {
-            const alertDiv = document.createElement('div');
-            alertDiv.className = `alert alert-${data.success ? 'success' : 'warning'} alert-dismissible fade show`;
-            alertDiv.role = 'alert';
-            alertDiv.innerHTML = `
-                <i class="fa-solid fa-${data.success ? 'check-circle' : 'exclamation-circle'} me-2"></i>
-                ${data.message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-            `;
-            document.querySelector('.container').insertBefore(alertDiv, document.querySelector('.card'));
-
-            if (data.success) {
-                updateCartCount();
-            }
-        });
-}
-
-function updateCartCount() {
-    fetch('/cart/count')
-        .then(res => res.json())
-        .then(data => {
-            // Cập nhật badge trong header nếu có
-            const badge = document.querySelector('#cart-badge');
-            if (badge) {
-                badge.textContent = data.count;
-                badge.style.display = data.count > 0 ? 'inline-block' : 'none';
-            }
-        });
-}
-
-// Cập nhật giỏ hàng khi trang tải
-document.addEventListener('DOMContentLoaded', updateCartCount);
-</script>
+<script src="{{ url_for('static', filename='js/book_detail.js') }}"></script>
 {% endblock %}

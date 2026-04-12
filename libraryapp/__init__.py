@@ -1,26 +1,27 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
-from flask_admin import Admin
 from flask_babel import Babel
 from flask_login import LoginManager
+from flask_admin import Admin
 import cloudinary
 
 app = Flask(__name__)
 
-#login
 app.secret_key = "!@#$%jasbej%$^(+eiwqbacjfas12399HBAS59^##GSDFG%%jjs;zs4$$"
-app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://root:08032005@localhost/librarydb?charset=utf8mb4"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:08032005@localhost/librarydb?charset=utf8mb4"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config['PAGE_SIZE'] = 50
 
 db = SQLAlchemy(app=app)
-
-admin = Admin(app=app, name="QUẢN TRỊ HỆ THỐNG THƯ VIỆN")
-
 login = LoginManager(app=app)
-
 babel = Babel(app, locale_selector=lambda: request.accept_languages.best_match(['vi', 'en']))
 
+from libraryapp.admin import StandardAdminIndexView, BookView, UserView
+from libraryapp.models import Book, User
+
+admin = Admin(app=app, name="QUẢN TRỊ THƯ VIỆN", index_view=StandardAdminIndexView())
+admin.add_view(BookView(Book, db.session, name="Quản lý Sách"))
+admin.add_view(UserView(User, db.session, name="Quản lý Người dùng"))
 # cloudinary.config(
 #     cloud_name='dt1pa28g2',
 #     api_key='824465552867193',

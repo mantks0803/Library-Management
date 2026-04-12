@@ -1,73 +1,45 @@
-{% extends 'layout/base.html' %}
+{% extends 'admin/master.html' %} {% block body %} <div class="container-fluid px-4 py-4">
 
-{% block title %}Trang Quản Trị - Thư viện OU{% endblock %}
-
-{% block content %}
-<div class="container-fluid px-4 py-4">
-
-    <h4 class="fw-bold text-primary text-uppercase mb-3 border-start border-5 border-primary ps-3 d-flex align-items-center">
-        <i class="fa-solid fa-circle-user me-2"></i> THÔNG TIN TÀI KHOẢN
+    <h4 class="fw-bold text-primary text-uppercase mb-3 border-start border-5 border-primary ps-3">
+        <i class="fa-solid fa-circle-user me-2"></i> THÔNG TIN ADMIN
     </h4>
-
     <div class="card card-modern p-4 mb-5 border-0 shadow-sm">
         <div class="row g-4 fs-6">
             <div class="col-md-6">
                 <div class="d-flex mb-4">
                     <span class="fw-bold text-secondary" style="width: 150px;">Họ và tên:</span>
-                    <span class="text-dark">Nguyễn Thanh Thuận</span>
+                    <span>{{ current_user.name }}</span>
                 </div>
-                <div class="d-flex mb-4">
-                    <span class="fw-bold text-secondary" style="width: 150px;">Email:</span>
-                    <span class="text-dark">thuan@gmail.com</span>
                 </div>
-                <div class="d-flex mt-2">
-                    <span class="fw-bold text-secondary" style="width: 150px;">Vai trò:</span>
-                    <span class="badge bg-primary rounded-pill px-3 py-2 fw-bold">Quản trị viên</span>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="d-flex mb-4">
-                    <span class="fw-bold text-secondary" style="width: 150px;">Số điện thoại:</span>
-                    <span class="text-dark">0334903055</span>
-                </div>
-                <div class="d-flex mb-4">
-                    <span class="fw-bold text-secondary" style="width: 150px;">Tên đăng nhập:</span>
-                    <span class="text-dark">admin</span>
-                </div>
-            </div>
         </div>
     </div>
 
-    <h4 class="fw-bold text-primary text-uppercase mb-3 border-start border-5 border-primary ps-3 d-flex align-items-center mt-5">
-        <i class="fa-solid fa-list-ul me-2"></i> DANH SÁCH ĐỘC GIẢ
+    <h4 class="fw-bold text-primary text-uppercase mb-3 border-start border-5 border-primary ps-3 mt-5">
+        <i class="fa-solid fa-list-ul me-2"></i> DANH SÁCH ĐỘC GIẢ MỚI
     </h4>
-
     <div class="card card-modern border-0 shadow-sm">
         <div class="table-responsive">
-            <table class="table align-middle mb-0">
+            <table class="table align-middle">
                 <thead class="bg-light">
                     <tr>
-                        <th class="text-primary py-3 ps-4 border-0"># ID</th>
-                        <th class="text-primary py-3 border-0"><i class="fa-solid fa-user me-1"></i> Họ và tên</th>
-                        <th class="text-primary py-3 border-0"><i class="fa-solid fa-envelope me-1"></i> Email</th>
-                        <th class="text-primary py-3 border-0"><i class="fa-solid fa-phone me-1"></i> Số điện thoại</th>
-                        <th class="text-primary py-3 border-0"><i class="fa-solid fa-user-tag me-1"></i> Tên đăng nhập</th>
-                        <th class="text-primary py-3 text-center pe-4 border-0"><i class="fa-solid fa-gears me-1"></i> Thao tác</th>
+                        <th class="ps-4"># ID</th>
+                        <th>Họ và tên</th>
+                        <th>Email</th>
+                        <th>Số điện thoại</th>
                     </tr>
                 </thead>
                 <tbody>
+                    {% for r in readers %}
                     <tr>
-                        <td colspan="6" class="text-center py-5">
-                            <div class="text-muted opacity-75">
-                                <i class="fa-solid fa-inbox mb-3" style="font-size: 3rem;"></i>
-                                <p class="mb-0 fw-medium">Không có độc giả nào</p>
-                            </div>
-                        </td>
+                        <td class="ps-4">#{{ r.id }}</td>
+                        <td class="fw-bold text-dark">{{ r.user.name }}</td>
+                        <td>{{ r.user.email }}</td>
+                        <td>{{ r.user.phone }}</td>
                     </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
-
 </div>
 {% endblock %}
