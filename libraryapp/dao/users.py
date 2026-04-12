@@ -1,4 +1,4 @@
-from libraryapp.models import User, UserRole
+from libraryapp.models import User, UserRole, Reader
 from libraryapp import db
 from libraryapp.utils import hash_password
 import re
@@ -12,10 +12,14 @@ def auth_user(username, password):
 
 def add_user(name, phone, email, username, password):
     password = hash_password(password)
-    # mac dinh: reader
     user = User(name=name.strip(), phone=phone, email=email.strip(), username=username.strip(), password=password, user_role=UserRole.READER)
 
     db.session.add(user)
+    db.session.flush()  # Để lấy user.id
+
+    reader = Reader(id=user.id)
+    db.session.add(reader)
+
     db.session.commit()
 
 def update_user(user_id, name, phone):
