@@ -1,6 +1,6 @@
-from libraryapp.routes import home, login_logout, register, infor_user, book_detail
+from libraryapp.routes import home, login_logout, register, infor_user, book_detail, borrow_cart
 
-from libraryapp.api import api_users
+from libraryapp.api import api_users, api_cart
 from libraryapp import app, login
 # from libraryapp.admin import *
 
@@ -14,10 +14,11 @@ def register_routes():
     app.register_blueprint(register.register_bp)
     app.register_blueprint(infor_user.infor_user_bp)
     app.register_blueprint(book_detail.book_bp)
+    app.register_blueprint(borrow_cart.borrow_bp)
 
 def register_api():
     app.register_blueprint(api_users.api_users_bp)
-
+    app.register_blueprint(api_cart.api_cart_bp)
 
 if __name__ == '__main__':
     register_routes()
