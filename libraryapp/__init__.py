@@ -1,21 +1,22 @@
 from flask import Flask, request
-from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
+from flask_sqlalchemy import SQLAlchemy
 from flask_babel import Babel
 from flask_login import LoginManager
+
 import cloudinary
 
 app = Flask(__name__)
 
 #login
 app.secret_key = "!@#$%jasbej%$^(+eiwqbacjfas12399HBAS59^##GSDFG%%jjs;zs4$$"
-app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://root:08032005@localhost/librarydb?charset=utf8mb4"
+app.config["SQLALCHEMY_DATABASE_URI"] ="mysql+pymysql://root:root@localhost/librarydb?charset=utf8mb4"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config['PAGE_SIZE'] = 6
 
 db = SQLAlchemy(app=app)
 
-admin = Admin(app=app, name="QUẢN TRỊ HỆ THỐNG THƯ VIỆN")
+
 
 login = LoginManager(app=app)
 

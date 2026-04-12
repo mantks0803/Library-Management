@@ -1,0 +1,33 @@
+{% extends 'admin/master.html' %}
+
+{% block body %}
+
+    {% if current_user.is_authenticated %}
+        <div class="text-center my-4">
+            <h1 class="text-primary fw-bold">Chào mừng đến trang Quản Trị</h1>
+            <h4 class="text-success mt-2">Xin chào, <span class="fw-semibold">{{ current_user.name }}</span> 👋</h4>
+        </div>
+
+    {% else %}
+
+    <div class="col-md-6 mx-auto mt-4">
+        <h2 class="text-center text-primary fw-bold mb-4">ĐĂNG NHẬP QUẢN TRỊ</h2>
+
+        <form method="post" action="/login?next=/admin" class="p-4 border rounded bg-light shadow-sm">
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Tên đăng nhập</label>
+                <input type="text" class="form-control" placeholder="Nhập tên đăng nhập" name="username">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold">Mật khẩu</label>
+                <input type="password" class="form-control" placeholder="Nhập mật khẩu" name="password">
+            </div>
+            <button type="submit" class="btn btn-primary w-100 fw-semibold">Đăng nhập</button>
+        </form>
+    </div>
+
+{% endif %}
+
+
+{% endblock %}

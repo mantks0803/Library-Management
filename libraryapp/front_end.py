@@ -53,7 +53,7 @@ def view_profile():
 
 @app.route('/admin', strict_slashes=False)
 def view_admin():
-    return render_template('admin/admin.html')
+    return render_template('admin/index.html')
 
 
 @app.route('/book/<int:book_id>', strict_slashes=False)

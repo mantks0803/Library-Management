@@ -2,7 +2,7 @@ from libraryapp.routes import home, login_logout, register, infor_user
 
 from libraryapp.api import api_users
 from libraryapp import app, login
-# from libraryapp.admin import *
+from libraryapp import admin
 
 @login.user_loader
 def load_user(user_id):
