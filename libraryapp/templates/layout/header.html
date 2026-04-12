@@ -6,9 +6,19 @@
             HỆ THỐNG THƯ VIỆN OU
         </a>
 
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center gap-3">
 
             {% if current_user.is_authenticated %}
+
+            {% if current_user.user_role.name == 'READER' %}
+            <a href="/cart/view" class="btn btn-outline-light rounded-pill fw-medium px-3 py-2 border-opacity-25 shadow-sm position-relative">
+                <i class="fa-solid fa-shopping-cart fs-5"></i>
+                <span id="cart-badge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="display: none;">
+                    0
+                </span>
+            </a>
+            {% endif %}
+
             <div class="dropdown">
                 <a class="btn btn-outline-light dropdown-toggle rounded-pill d-flex align-items-center fw-medium px-4 py-2 border-opacity-25 shadow-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fa-solid fa-circle-user fs-5 align-middle me-2"></i> {{ current_user.name }}
@@ -23,11 +33,13 @@
                         </a>
                     </li>
 
+                    {% if current_user.user_role.name == 'READER' %}
                     <li>
-                        <a class="dropdown-item py-2 fw-medium" href="#">
+                        <a class="dropdown-item py-2 fw-medium" href="/history">
                             <i class="fa-solid fa-clock-rotate-left text-primary me-2"></i> Lịch sử Mượn/Trả
                         </a>
                     </li>
+                    {% endif %}
 
                     <li>
                         <a class="dropdown-item py-2 fw-medium" href="#">
@@ -60,3 +72,22 @@
         </div>
     </div>
 </nav>
+
+<script>
+// Cập nhật số lượng giỏ mượn
+function updateCartBadge() {
+    if (document.querySelector('#cart-badge')) {
+        fetch('/cart/count')
+            .then(res => res.json())
+            .then(data => {
+                const badge = document.querySelector('#cart-badge');
+                badge.textContent = data.count;
+                badge.style.display = data.count > 0 ? 'inline-block' : 'none';
+            })
+            .catch(() => {}); // Bỏ qua lỗi nếu chưa đăng nhập
+    }
+}
+
+// Cập nhật khi trang tải
+document.addEventListener('DOMContentLoaded', updateCartBadge);
+</script>
