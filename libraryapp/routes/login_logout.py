@@ -32,6 +32,6 @@ def login_process():
 
 
 @login_logout_bp.route('/profile')
-@login_required  # Phải đăng nhập mới được xem
+@login_required
 def profile_view():
     return render_template('auth/profile.html')
