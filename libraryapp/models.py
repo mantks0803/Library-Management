@@ -72,6 +72,7 @@ class BorrowSlip(BaseModel):
 
     borrow_date = Column(DateTime, default=datetime.now())
     due_date = Column(DateTime, nullable=False)
+    status = Column(Enum(BorrowSlipStatus), default=BorrowSlipStatus.BORROWING)
     penalty_fee = Column(Double, default=0)  # Phí phạt của toàn phiếu mượn
 
     borrow_slip_details = relationship("BorrowSlipDetail", lazy=True)
@@ -82,7 +83,6 @@ class BorrowSlipDetail(BaseModel):
     borrow_slip_id = Column(Integer, ForeignKey("borrow_slip.id", ondelete="CASCADE"))
     book_id = Column(Integer, ForeignKey("book.id"))
 
-    status = Column(Enum(BorrowSlipStatus), default=BorrowSlipStatus.BORROWING)
     return_date = Column(DateTime, nullable=True)
     is_returned = Column(Boolean, default=False)
 

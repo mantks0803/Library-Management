@@ -5,8 +5,9 @@ from datetime import datetime, timedelta
 from libraryapp.utils import permission
 from libraryapp.dao.books import get_book
 from libraryapp.dao.borrow_slips import create_borrow_slip_multiple
-from libraryapp.models import Reader, User, UserRole
+from libraryapp.models import Reader, User, UserRole, BorrowSlip, BorrowSlipStatus
 from libraryapp.api.api_cart import get_cart, save_cart
+from libraryapp import db
 
 borrow_bp = Blueprint('borrow', __name__)
 
@@ -46,7 +47,26 @@ def confirm():
 
     reader = Reader.query.get(current_user.id)
 
-    # Tạo phiếu mượn
+    # 1. Kiểm tra tài khoản có bị khóa không
+    if not reader or reader.status.name == 'LOCKED':
+        return jsonify({
+            'success': False,
+            'message': 'Tài khoản của bạn đang bị khóa! Vui lòng liên hệ thư viện để được hỗ trợ.'
+        })
+
+    # 2. Kiểm tra reader có phiếu mượn với status OVERDUE không
+    overdue_slip = db.session.query(BorrowSlip).filter(
+        BorrowSlip.reader_id == reader.id,
+        BorrowSlip.status == BorrowSlipStatus.OVERDUE
+    ).first()
+
+    if overdue_slip:
+        return jsonify({
+            'success': False,
+            'message': f'Bạn không thể mượn sách! Vui lòng trả sách quá hạn trước (Phiếu mượn #{overdue_slip.id}).'
+        })
+
+    # 3. Tạo phiếu mượn
     borrow_slip, details = create_borrow_slip_multiple(
         reader_id=reader.id,
         book_ids=cart,
@@ -55,8 +75,12 @@ def confirm():
 
     if borrow_slip:
         save_cart([])
-        flash("Đã mượn sách thành công! Vui lòng đến thư viện để nhận sách và xem thông tin phiếu mượn trong trang cá nhân.")
-        return redirect('/')
+        return jsonify({
+            'success': True,
+            'message': 'Đã mượn sách thành công! Vui lòng đến thư viện để nhận sách.'
+        })
     else:
-        flash("Lỗi khi tạo phiếu mượn. Vui lòng thử lại sau!")
-        return redirect('/')
+        return jsonify({
+            'success': False,
+            'message': 'Lỗi khi tạo phiếu mượn. Vui lòng thử lại sau!'
+        })
