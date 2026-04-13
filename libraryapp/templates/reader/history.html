@@ -30,29 +30,54 @@
                     </thead>
                     <tbody>
                         {% if history_list %}
-                            {% for item in history_list %}
-                            <tr>
-                                <td class="ps-4 fw-bold text-muted">#{{ item.id }}</td>
-                                <td class="fw-bold text-primary">{{ item.book_title }}</td>
-                                <td class="text-secondary fw-medium">{{ item.borrow_date }}</td>
-                                <td class="text-secondary fw-medium">{{ item.due_date }}</td>
-                                <td>
-                                    {% if item.return_date %}
-                                        <span class="text-success fw-bold">{{ item.return_date }}</span>
-                                    {% else %}
-                                        <span class="text-muted fst-italic">Chưa trả</span>
+                            {% for slip in history_list %}
+                                {% for book in slip.books %}
+                                <tr>
+                                    <!-- Mã phiếu: chỉ hiển thị ở dòng đầu tiên của mỗi phiếu -->
+                                    {% if loop.first %}
+                                        <td class="ps-4 fw-bold text-muted" rowspan="{{ slip.books|length }}">
+                                            #{{ slip.slip_id }}
+                                        </td>
                                     {% endif %}
-                                </td>
-                                <td class="text-center">
-                                    {% if item.status == 'Đã trả' %}
-                                        <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-check me-1"></i> Đã trả</span>
-                                    {% elif item.status == 'Đang mượn' %}
-                                        <span class="badge bg-primary rounded-pill px-3 py-2"><i class="fa-solid fa-book-open-reader me-1"></i> Đang mượn</span>
-                                    {% else %}
-                                        <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fa-solid fa-triangle-exclamation me-1"></i> Quá hạn</span>
+
+                                    <!-- Tên sách: hiển thị tất cả các sách -->
+                                    <td class="fw-bold text-primary">{{ book.title }}</td>
+
+                                    <!-- Ngày mượn: chỉ hiển thị ở dòng đầu tiên của mỗi phiếu -->
+                                    {% if loop.first %}
+                                        <td class="text-secondary fw-medium" rowspan="{{ slip.books|length }}">
+                                            {{ slip.borrow_date }}
+                                        </td>
                                     {% endif %}
-                                </td>
-                            </tr>
+
+                                    <!-- Hạn trả: chỉ hiển thị ở dòng đầu tiên của mỗi phiếu -->
+                                    {% if loop.first %}
+                                        <td class="text-secondary fw-medium" rowspan="{{ slip.books|length }}">
+                                            {{ slip.due_date }}
+                                        </td>
+                                    {% endif %}
+
+                                    <!-- Ngày trả: hiển thị cho từng sách -->
+                                    <td>
+                                        {% if book.return_date %}
+                                            <span class="text-success fw-bold">{{ book.return_date }}</span>
+                                        {% else %}
+                                            <span class="text-muted fst-italic">Chưa trả</span>
+                                        {% endif %}
+                                    </td>
+
+                                    <!-- Trạng thái: hiển thị cho từng sách -->
+                                    <td class="text-center">
+                                        {% if book.status == 'Đã trả' %}
+                                            <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-check me-1"></i> Đã trả</span>
+                                        {% elif book.status == 'Đang mượn' %}
+                                            <span class="badge bg-primary rounded-pill px-3 py-2"><i class="fa-solid fa-book-open-reader me-1"></i> Đang mượn</span>
+                                        {% else %}
+                                            <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fa-solid fa-triangle-exclamation me-1"></i> Quá hạn</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
                             {% endfor %}
                         {% else %}
                             <tr>
