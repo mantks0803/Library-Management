@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_babel import Babel
 from flask_login import LoginManager
 from flask_admin import Admin
+from flask_admin.theme import Bootstrap4Theme
+
 import cloudinary
 
 app = Flask(__name__)
@@ -19,9 +21,14 @@ babel = Babel(app, locale_selector=lambda: request.accept_languages.best_match([
 from libraryapp.admin import StandardAdminIndexView, BookView, UserView
 from libraryapp.models import Book, User
 
-admin = Admin(app=app, name="QUẢN TRỊ THƯ VIỆN", index_view=StandardAdminIndexView())
-admin.add_view(BookView(Book, db.session, name="Quản lý Sách"))
-admin.add_view(UserView(User, db.session, name="Quản lý Người dùng"))
+admin = Admin(
+    app=app,
+    name="QUẢN TRỊ THƯ VIỆN",
+    theme=Bootstrap4Theme(swatch='cerulean'),
+    index_view=StandardAdminIndexView()
+    )
+admin.add_view(BookView(Book, db.session, name="Quản Lý Sách"))
+admin.add_view(UserView(User, db.session, name="Quản Lý Người dùng"))
 # cloudinary.config(
 #     cloud_name='dt1pa28g2',
 #     api_key='824465552867193',
