@@ -44,22 +44,6 @@ def create_borrow_slip_multiple(reader_id, book_ids, borrow_date=None, days=7):
         return None, []
 
 
-def get_reader_borrow_slips(reader_id, page=1):
-
-    query = BorrowSlip.query.filter(BorrowSlip.reader_id == reader_id)
-    count = query.count()
-    query = query.order_by(BorrowSlip.borrow_date.desc())
-    start = (page - 1) * app.config.get('PAGE_SIZE', 10)
-    return query.slice(start, start + app.config.get('PAGE_SIZE', 10)).all(), count
-
-
-def get_borrow_slip(slip_id):
-    return BorrowSlip.query.get(slip_id)
-
-
-def get_borrow_slip_details(slip_id):
-    return db.session.query(BorrowSlipDetail).filter(
-        BorrowSlipDetail.borrow_slip_id == slip_id).all()
 
 
 def return_book(slip_detail_id, return_date=None):
