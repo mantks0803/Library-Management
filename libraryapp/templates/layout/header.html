@@ -45,7 +45,8 @@
                     </li>
                     {% endif %}
                     <li>
-                        <a class="dropdown-item py-2 fw-medium" href="#">
+                        <a class="dropdown-item py-2 fw-medium" href="#" data-bs-toggle="modal"
+                           data-bs-target="#changePasswordModal">
                             <i class="fa-solid fa-key text-primary me-2"></i> Đổi mật khẩu
                         </a>
                     </li>
@@ -74,5 +75,47 @@
         </div>
     </div>
 </nav>
-
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-key me-2"></i>Đổi mật khẩu</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="changePasswordForm">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Mật khẩu hiện tại</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-primary"><i
+                                    class="fa-solid fa-unlock-keyhole"></i></span>
+                            <input type="password" class="form-control" id="oldPassword" required>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-secondary">Mật khẩu mới</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-primary"><i class="fa-solid fa-lock"></i></span>
+                            <input type="password" class="form-control" id="newPassword" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-secondary">Xác nhận mật khẩu mới</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-primary"><i
+                                    class="fa-solid fa-check-double"></i></span>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-light fw-bold flex-grow-1" data-bs-dismiss="modal">Hủy
+                        </button>
+                        <button type="submit" class="btn btn-primary fw-bold flex-grow-1">Xác nhận đổi</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <script src="{{ url_for('static', filename='js/header.js') }}"></script>

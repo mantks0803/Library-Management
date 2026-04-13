@@ -47,9 +47,11 @@ Hệ thống cho phép người dùng thực hiện các chức năng:
 1. Mượn sách
 2. Trả sách
 3. Tìm kiếm sách
+4. Quản lý sách (Admin)
+5. Quản lý người dùng (Admin)
 
 ---
 
 ## Ghi chú
 
-Dự án được thực hiện phục vụ mục đích học tập trong môn Kiểm thử phần mềm.
+Dự án là BÀI TẬP LỚN phục vụ cho môn: Kiểm thử phần mềm
