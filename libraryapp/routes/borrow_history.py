@@ -5,12 +5,18 @@ from libraryapp.dao.users import get_current_user
 from libraryapp.dao.books import get_book
 from libraryapp.dao.readers import get_reader
 from libraryapp.dao.borrow_history import get_borrow_slip, get_all_reader_borrow_details
+from libraryapp.models import BorrowSlipStatus, UserRole
+from libraryapp.utils import permission
+
 from datetime import datetime
 
 history_bp = Blueprint('borrow_history', __name__)
 
 @history_bp.route('/history', methods=['GET'])
-@permission()
+@permission(allow={
+    "roles": [UserRole.READER],
+    "access": True
+})
 def render_borrow_history():
     user = get_current_user(current_user.id)
     reader = get_reader(user.id)
@@ -27,10 +33,10 @@ def render_borrow_history():
             book = get_book(detail.book_id)
             borrow_slip = get_borrow_slip(detail.borrow_slip_id)
 
-            # Xác định trạng thái
-            if detail.is_returned:
+            # Lấy trạng thái từ BorrowSlipDetail
+            if detail.status == BorrowSlipStatus.RETURNED:
                 status = 'Đã trả'
-            elif borrow_slip and borrow_slip.due_date < datetime.now():
+            elif detail.status == BorrowSlipStatus.OVERDUE:
                 status = 'Quá hạn'
             else:
                 status = 'Đang mượn'
@@ -44,6 +50,7 @@ def render_borrow_history():
                     'slip_id': borrow_slip.id if borrow_slip else 'N/A',
                     'borrow_date': borrow_slip.borrow_date.strftime('%d/%m/%Y') if borrow_slip else 'N/A',
                     'due_date': borrow_slip.due_date.strftime('%d/%m/%Y') if borrow_slip else 'N/A',
+                    'penalty_fee': borrow_slip.penalty_fee if borrow_slip else 0,
                     'books': []
                 }
 

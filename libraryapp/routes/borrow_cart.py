@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, session, jsonify, redirect, flash
-from flask_login import current_user, login_required
+from flask_login import current_user
 from datetime import datetime, timedelta
 
-from pyexpat.errors import messages
-
+from libraryapp.utils import permission
 from libraryapp.dao.books import get_book
 from libraryapp.dao.borrow_slips import create_borrow_slip_multiple
 from libraryapp.models import Reader, User, UserRole
@@ -12,12 +11,11 @@ from libraryapp.api.api_cart import get_cart, save_cart
 borrow_bp = Blueprint('borrow', __name__)
 
 @borrow_bp.route('/cart/view', methods=['GET'])
-@login_required
+@permission(allow={
+    "roles": [UserRole.READER],
+    "access": True
+})
 def view_cart():
-
-    if current_user.user_role != UserRole.READER:
-        flash("Bạn không có quyền! Vui lòng đăng nhập bằng tài khoản độc giả.")
-        return redirect('/')
 
     cart = get_cart()
 
@@ -39,14 +37,14 @@ def view_cart():
                          cart_count=len(cart))
 
 @borrow_bp.route('/cart/confirm', methods=['POST'])
-@login_required
+@permission(allow={
+    "roles": [UserRole.READER],
+    "access": True
+})
 def confirm():
     cart = get_cart()
 
-
     reader = Reader.query.get(current_user.id)
-    if not User.user_role.name != 'reader':
-        return redirect('/')
 
     # Tạo phiếu mượn
     borrow_slip, details = create_borrow_slip_multiple(

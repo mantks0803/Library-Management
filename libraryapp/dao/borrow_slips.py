@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from libraryapp import db, app
-from libraryapp.models import BorrowSlip, BorrowSlipDetail, Book, Reader, User, UserRole
+from libraryapp.models import BorrowSlip, BorrowSlipDetail, Book, Reader, User, UserRole, BorrowSlipStatus
 from sqlalchemy import and_, func, or_
 from flask_login import current_user
 
@@ -16,7 +16,12 @@ def create_borrow_slip_multiple(reader_id, book_ids, borrow_date=None, days=7):
 
         due_date = borrow_date + timedelta(days=days)
 
-        borrow_slip = BorrowSlip(reader_id=reader_id, borrow_date=borrow_date, due_date=due_date)
+        borrow_slip = BorrowSlip(
+            reader_id=reader_id,
+            borrow_date=borrow_date,
+            penalty_fee=0,
+            due_date=due_date
+        )
         db.session.add(borrow_slip)
         db.session.flush()
 
@@ -29,6 +34,7 @@ def create_borrow_slip_multiple(reader_id, book_ids, borrow_date=None, days=7):
             borrow_slip_detail = BorrowSlipDetail(
                 borrow_slip_id=borrow_slip.id,
                 book_id=book_id,
+                status=BorrowSlipStatus.BORROWING,
                 return_date=None,
                 is_returned=False
             )
@@ -71,8 +77,46 @@ def return_book(slip_detail_id, return_date=None):
     if book:
         book.quantity += 1
 
+    # Cập nhật status của BorrowSlipDetail
+    borrow_slip = BorrowSlip.query.get(slip_detail.borrow_slip_id)
+    if borrow_slip:
+        # Xác định status: Nếu trả trễ hạn của phiếu → status OVERDUE, ngược lại RETURNED
+        if return_date > borrow_slip.due_date:
+            slip_detail.status = BorrowSlipStatus.OVERDUE
+        else:
+            slip_detail.status = BorrowSlipStatus.RETURNED
+
+        # Kiểm tra xem đã trả hết sách trong phiếu chưa
+        all_returned = all(d.is_returned for d in borrow_slip.borrow_slip_details)
+        if all_returned:
+            # Tính phí phạt khi tất cả sách đã trả
+            max_return_date = max(d.return_date for d in borrow_slip.borrow_slip_details)
+            if max_return_date > borrow_slip.due_date:
+                borrow_slip.penalty_fee = calculate_penalty_fee(borrow_slip.due_date, max_return_date)
+            else:
+                borrow_slip.penalty_fee = 0
+
     db.session.commit()
     return slip_detail
+
+
+def calculate_penalty_fee(due_date, return_date, fee_per_day=10000):
+    """
+    Tính phí phạt dựa trên số ngày trễ
+    
+    Args:
+        due_date: ngày hạn trả
+        return_date: ngày trả thực tế
+        fee_per_day: phí phạt/ngày (mặc định 10,000 đồng)
+    
+    Returns:
+        float: số tiền phạt
+    """
+    if return_date <= due_date:
+        return 0
+    
+    days_late = (return_date - due_date).days
+    return days_late * fee_per_day
 
 
 def get_overdue_borrow_slips(page=1):
