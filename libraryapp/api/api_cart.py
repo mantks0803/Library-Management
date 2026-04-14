@@ -1,6 +1,6 @@
 from flask import Blueprint, session, jsonify
 from flask_login import login_required, current_user
-
+from libraryapp.utils import permission
 from libraryapp.dao.books import get_book
 from libraryapp.models import User, UserRole
 
@@ -19,13 +19,11 @@ def save_cart(cart):
 
 
 @api_cart_bp.route('/cart/add/<int:book_id>', methods=['POST'])
-@login_required
+@permission(allow={
+    "roles": [UserRole.READER],
+    "access": True
+})
 def add_to_cart(book_id):
-    if current_user.user_role != UserRole.READER:
-        return jsonify({
-            'success': False,
-            'message': 'Chỉ độc giả mới có thể mượn sách! Hãy đăng ký tài khoản độc giả.'
-        })
 
     book = get_book(book_id)
 
@@ -40,6 +38,9 @@ def add_to_cart(book_id):
     cart.append(book_id)
     save_cart(cart)
 
+    if len(cart) >= 5:
+        return jsonify({'success': False, 'message': 'Bạn chỉ có thể mượn tối đa 5 cuốn sách!'})
+
     return jsonify({
         'success': True,
         'message': f'Đã thêm "{book.title}" vào giỏ mượn!',
@@ -47,7 +48,10 @@ def add_to_cart(book_id):
     })
 
 @api_cart_bp.route('/cart/remove/<int:book_id>', methods=['POST'])
-@login_required
+@permission(allow={
+    "roles": [UserRole.READER],
+    "access": True
+})
 def remove_from_cart(book_id):
     cart = get_cart()
 
@@ -60,13 +64,19 @@ def remove_from_cart(book_id):
 
 
 @api_cart_bp.route('/cart/clear', methods=['POST'])
-@login_required
+@permission(allow={
+    "roles": [UserRole.READER],
+    "access": True
+})
 def clear_cart():
     save_cart([])
     return jsonify({'success': True, 'message': 'Giỏ mượn đã được xóa!'})
 
 @api_cart_bp.route('/cart/count', methods=['GET'])
-@login_required
+@permission(allow={
+    "roles": [UserRole.READER],
+    "access": True
+})
 def get_cart_count():
     cart = get_cart()
     return jsonify({'count': len(cart)})

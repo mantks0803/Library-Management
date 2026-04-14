@@ -18,6 +18,15 @@ class UserRole(enum.Enum):
     ADMIN = 1
     READER = 2
 
+class ReaderStatus(enum.Enum):
+    ACTIVE = 1  # Hoạt động
+    LOCKED = 2  # Bị khóa
+
+class BorrowSlipStatus(enum.Enum):
+    BORROWING = 1  # Đang mượn
+    RETURNED = 2   # Đã trả
+    OVERDUE = 3    # Quá hạn
+
 class User(BaseModel, UserMixin):
     __tablename__ = 'user'
 
@@ -36,6 +45,7 @@ class Reader(BaseModel):
     __tablename__ = "reader"
 
     id = Column(Integer, ForeignKey('user.id'), primary_key=True)
+    status = Column(Enum(ReaderStatus), default=ReaderStatus.ACTIVE)
     borrow_slips = relationship("BorrowSlip", backref="reader", lazy=True)
 
     def __str__(self):
@@ -62,6 +72,8 @@ class BorrowSlip(BaseModel):
 
     borrow_date = Column(DateTime, default=datetime.now())
     due_date = Column(DateTime, nullable=False)
+    status = Column(Enum(BorrowSlipStatus), default=BorrowSlipStatus.BORROWING)
+    penalty_fee = Column(Double, default=0)  # Phí phạt của toàn phiếu mượn
 
     borrow_slip_details = relationship("BorrowSlipDetail", lazy=True)
 
