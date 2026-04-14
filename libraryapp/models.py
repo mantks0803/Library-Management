@@ -49,7 +49,7 @@ class Reader(BaseModel):
     borrow_slips = relationship("BorrowSlip", backref="reader", lazy=True)
 
     def __str__(self):
-        return self.name
+        return self.user.name if self.user else str(self.id)
 
 class Book(BaseModel):
     __tablename__ = "book"
@@ -125,9 +125,11 @@ def init_all_data():
     insert_books()
     with app.app_context():
         create_user_base("Nguyễn Thanh Thuận", "0334903055","thuan@gmail.com", "admin", "123", UserRole.ADMIN)
+        create_user_base("Nguyễn Thanh Mẫn", "0334903355","dephucau@gmail.com", "man", "123", UserRole.READER)
+
         db.session.commit()
 
 
-if __name__ == "__main__":
-    create_db()
-    init_all_data()
+#if __name__ == "__main__":
+   # create_db()
+   # init_all_data()

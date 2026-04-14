@@ -48,6 +48,27 @@
                             </div>
                         </div>
 
+                        <div class="row mb-3 pb-2 border-bottom">
+                            <div class="col-sm-4"><h6 class="mb-0 text-muted fw-bold">Trạng thái tài khoản</h6></div>
+                            <div class="col-sm-8 text-secondary fw-medium">
+                                {% if current_user.reader %}
+                                    {% if current_user.reader.status.name == 'ACTIVE' %}
+                                        <span class="badge bg-success rounded-pill px-3">
+                                            <i class="fa-solid fa-check-circle me-1"></i>{{ current_user.reader.status.name }}
+                                        </span>
+                                    {% elif current_user.reader.status.name == 'LOCKED' %}
+                                        <span class="badge bg-danger rounded-pill px-3">
+                                            <i class="fa-solid fa-lock me-1"></i>{{ current_user.reader.status.name }}
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary rounded-pill px-3">{{ current_user.reader.status.name }}</span>
+                                    {% endif %}
+                                {% else %}
+                                    <span class="badge bg-secondary rounded-pill px-3">N/A</span>
+                                {% endif %}
+                            </div>
+                        </div>
+
                         <div class="mt-4 pt-3 text-end">
                             <button class="btn btn-outline-primary fw-bold rounded-pill px-4" data-bs-toggle="modal"
                                     data-bs-target="#updateProfileModal">

@@ -66,16 +66,18 @@
                                         {% endif %}
                                     </td>
 
-                                    <!-- Trạng thái: hiển thị cho từng sách -->
-                                    <td class="text-center">
-                                        {% if book.status == 'Đã trả' %}
-                                            <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-check me-1"></i> Đã trả</span>
-                                        {% elif book.status == 'Đang mượn' %}
-                                            <span class="badge bg-primary rounded-pill px-3 py-2"><i class="fa-solid fa-book-open-reader me-1"></i> Đang mượn</span>
-                                        {% else %}
-                                            <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fa-solid fa-triangle-exclamation me-1"></i> Quá hạn</span>
-                                        {% endif %}
-                                    </td>
+                                    <!-- Trạng thái: hiển thị status của phiếu (dùng cho tất cả sách trong phiếu) -->
+                                    {% if loop.first %}
+                                        <td class="text-center" rowspan="{{ slip.books|length }}">
+                                            {% if slip.status == 'Đã trả' %}
+                                                <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-check me-1"></i> Đã trả</span>
+                                            {% elif slip.status == 'Đang mượn' %}
+                                                <span class="badge bg-primary rounded-pill px-3 py-2"><i class="fa-solid fa-book-open-reader me-1"></i> Đang mượn</span>
+                                            {% else %}
+                                                <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fa-solid fa-triangle-exclamation me-1"></i> Quá hạn</span>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             {% endfor %}

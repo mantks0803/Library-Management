@@ -23,3 +23,22 @@ function clearCart() {
             });
     }
 }
+
+function confirmBorrow() {
+    fetch('/cart/confirm', { method: 'POST' })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert('Ok ' + data.message);
+                // Redirect về trang chủ sau 1 giây
+                setTimeout(() => {
+                    window.location.href = '/';
+                }, 500);
+            } else {
+                alert('Error ' + data.message);
+            }
+        })
+        .catch(error => {
+            alert(' Lỗi kết nối: ' + error.message);
+        });
+}
