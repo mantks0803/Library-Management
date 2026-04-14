@@ -1,4 +1,4 @@
-from libraryapp.routes import home, login_logout, register, infor_user, book_detail, borrow_cart, borrow_history
+from libraryapp.routes import home, login_logout, register, infor_user, book_detail, borrow_cart, borrow_history, return_slips
 
 from libraryapp.api import api_users, api_cart
 from libraryapp import app, login
@@ -16,6 +16,7 @@ def register_routes():
     app.register_blueprint(book_detail.book_bp)
     app.register_blueprint(borrow_cart.borrow_bp)
     app.register_blueprint(borrow_history.history_bp)
+    app.register_blueprint(return_slips.return_slips_bp)
 
 def register_api():
     app.register_blueprint(api_users.api_users_bp)

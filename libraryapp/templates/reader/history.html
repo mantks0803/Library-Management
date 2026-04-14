@@ -26,38 +26,33 @@
                             <th class="py-3 border-0">Hạn trả</th>
                             <th class="py-3 border-0">Ngày trả thực tế</th>
                             <th class="py-3 border-0 text-center">Trạng thái</th>
-                        </tr>
+                            <th class="py-3 border-0 text-center">Thao tác</th> </tr>
                     </thead>
                     <tbody>
                         {% if history_list %}
                             {% for slip in history_list %}
                                 {% for book in slip.books %}
                                 <tr>
-                                    <!-- Mã phiếu: chỉ hiển thị ở dòng đầu tiên của mỗi phiếu -->
                                     {% if loop.first %}
                                         <td class="ps-4 fw-bold text-muted" rowspan="{{ slip.books|length }}">
                                             #{{ slip.slip_id }}
                                         </td>
                                     {% endif %}
 
-                                    <!-- Tên sách: hiển thị tất cả các sách -->
                                     <td class="fw-bold text-primary">{{ book.title }}</td>
 
-                                    <!-- Ngày mượn: chỉ hiển thị ở dòng đầu tiên của mỗi phiếu -->
                                     {% if loop.first %}
                                         <td class="text-secondary fw-medium" rowspan="{{ slip.books|length }}">
                                             {{ slip.borrow_date }}
                                         </td>
                                     {% endif %}
 
-                                    <!-- Hạn trả: chỉ hiển thị ở dòng đầu tiên của mỗi phiếu -->
                                     {% if loop.first %}
                                         <td class="text-secondary fw-medium" rowspan="{{ slip.books|length }}">
                                             {{ slip.due_date }}
                                         </td>
                                     {% endif %}
 
-                                    <!-- Ngày trả: hiển thị cho từng sách -->
                                     <td>
                                         {% if book.return_date %}
                                             <span class="text-success fw-bold">{{ book.return_date }}</span>
@@ -66,7 +61,6 @@
                                         {% endif %}
                                     </td>
 
-                                    <!-- Trạng thái: hiển thị status của phiếu (dùng cho tất cả sách trong phiếu) -->
                                     {% if loop.first %}
                                         <td class="text-center" rowspan="{{ slip.books|length }}">
                                             {% if slip.status == 'Đã trả' %}
@@ -78,12 +72,25 @@
                                             {% endif %}
                                         </td>
                                     {% endif %}
+
+                                    {% if loop.first %}
+                                        <td class="text-center" rowspan="{{ slip.books|length }}">
+                                            {% if slip.status != 'Đã trả' %}
+                                                <button class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3"
+                                                        onclick="openReturnModal({{ slip.slip_id }})">
+                                                    <i class="fa-solid fa-rotate-left me-1"></i> Trả sách
+                                                </button>
+                                            {% else %}
+                                                <span class="text-muted small"><i class="fa-solid fa-check-double me-1"></i>Hoàn tất</span>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
                                 </tr>
                                 {% endfor %}
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="6" class="text-center py-5">
+                                <td colspan="7" class="text-center py-5">
                                     <div class="text-muted opacity-75">
                                         <i class="fa-solid fa-box-open mb-3" style="font-size: 3rem;"></i>
                                         <p class="mb-0 fw-medium">Bạn chưa mượn cuốn sách nào!</p>
@@ -98,4 +105,50 @@
     </div>
 
 </div>
+
+<div class="modal fade" id="returnBookModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title fw-bold"><i class="fa-solid fa-rotate-left me-2"></i>Xác nhận trả sách</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="alert alert-light border border-success border-opacity-25 mb-4">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted fw-bold">Mã phiếu:</span>
+                        <span class="fw-bold text-primary" id="modalSlipId">#</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted fw-bold">Ngày mượn:</span>
+                        <span class="fw-medium" id="modalBorrowDate"></span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted fw-bold">Hạn trả:</span>
+                        <span class="fw-medium text-danger" id="modalDueDate"></span>
+                    </div>
+                    <div class="d-flex justify-content-between border-top pt-2 mt-2">
+                        <span class="text-muted fw-bold">Ngày trả thực tế:</span>
+                        <span class="fw-bold text-success" id="modalCurrentDate"></span>
+                    </div>
+                </div>
+
+                <h6 class="fw-bold text-secondary mb-2"><i class="fa-solid fa-book-open me-2"></i>Sách đang mượn:</h6>
+                <ul class="list-group list-group-flush mb-4" id="modalBookList">
+                    </ul>
+
+                <div class="d-flex gap-2">
+                    <button type="button" class="btn btn-light fw-bold flex-grow-1" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-success fw-bold flex-grow-1" id="btnConfirmReturn">Xác nhận trả</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const historyData = {{ history_list | tojson | safe }};
+</script>
+<script src="{{ url_for('static', filename='js/history.js') }}"></script>
+
 {% endblock %}
