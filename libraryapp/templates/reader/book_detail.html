@@ -37,21 +37,21 @@
                     <a href="/" class="btn btn-outline-secondary px-4 py-3 fw-bold rounded-pill">
                         <i class="fa-solid fa-arrow-left me-2"></i> Quay lại
                     </a>
-                    {% if current_user.is_authenticated %}
-                    {% if book.quantity > 0 %}
-                    <button class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1"
-                            onclick="addToCart({{ book.id }}, '{{ book.title }}')" style="font-size: 1.1rem;">
-                        <i class="fa-solid fa-cart-plus me-2"></i> THÊM VÀO GIỎ MƯỢN
-                    </button>
+                    {% if current_user.is_authenticated and current_user.user_role.name == 'READER' %}
+                        {% if book.quantity > 0 %}
+                        <button class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1"
+                                onclick="addToCart({{ book.id }}, '{{ book.title }}')" style="font-size: 1.1rem;">
+                            <i class="fa-solid fa-cart-plus me-2"></i> THÊM VÀO GIỎ MƯỢN
+                        </button>
+                        {% else %}
+                        <button class="btn btn-secondary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1" disabled>
+                            SÁCH ĐÃ HẾT
+                        </button>
+                        {% endif %}
                     {% else %}
-                    <button class="btn btn-secondary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1" disabled>
-                        SÁCH ĐÃ HẾT
-                    </button>
-                    {% endif %}
-                    {% else %}
-                    <a href="/login" class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1"
+                    <a href="/" class="btn btn-primary px-5 py-3 fw-bold rounded-pill shadow-sm flex-grow-1"
                        style="font-size: 1.1rem;">
-                        <i class="fa-solid fa-arrow-right me-2"></i> ĐĂNG NHẬP ĐỂ MƯỢN
+                        <i class="fa-solid fa-arrow-right me-2"></i> ĐĂNG NHẬP READER ĐỂ MƯỢN
                     </a>
                     {% endif %}
                 </div>
