@@ -18,17 +18,18 @@ db = SQLAlchemy(app=app)
 login = LoginManager(app=app)
 babel = Babel(app, locale_selector=lambda: request.accept_languages.best_match(['vi', 'en']))
 
-from libraryapp.admin import StandardAdminIndexView, BookView, UserView
-from libraryapp.models import Book, User
+from libraryapp.admin import StandardAdminIndexView, BookView, UserView,BorrowSlipView
+from libraryapp.models import Book, User,BorrowSlip
 
 admin = Admin(
     app=app,
     name="QUẢN TRỊ THƯ VIỆN",
-    theme=Bootstrap4Theme(swatch='cerulean'),
+    theme=Bootstrap4Theme(swatch='flatly'),
     index_view=StandardAdminIndexView()
     )
 admin.add_view(BookView(Book, db.session, name="Quản Lý Sách"))
 admin.add_view(UserView(User, db.session, name="Quản Lý Người dùng"))
+admin.add_view(BorrowSlipView(BorrowSlip, db.session, name="Duyệt Trả Sách"))
 # cloudinary.config(
 #     cloud_name='dt1pa28g2',
 #     api_key='824465552867193',

@@ -26,7 +26,8 @@
                             <th class="py-3 border-0">Hạn trả</th>
                             <th class="py-3 border-0">Ngày trả thực tế</th>
                             <th class="py-3 border-0 text-center">Trạng thái</th>
-                            <th class="py-3 border-0 text-center">Thao tác</th> </tr>
+                            <th class="py-3 border-0 text-center">Thao tác</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {% if history_list %}
@@ -67,6 +68,8 @@
                                                 <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-check me-1"></i> Đã trả</span>
                                             {% elif slip.status == 'Đang mượn' %}
                                                 <span class="badge bg-primary rounded-pill px-3 py-2"><i class="fa-solid fa-book-open-reader me-1"></i> Đang mượn</span>
+                                            {% elif slip.status == 'Chờ duyệt' %}
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2"><i class="fa-solid fa-hourglass-half me-1"></i> Chờ duyệt</span>
                                             {% else %}
                                                 <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fa-solid fa-triangle-exclamation me-1"></i> Quá hạn</span>
                                             {% endif %}
@@ -75,11 +78,13 @@
 
                                     {% if loop.first %}
                                         <td class="text-center" rowspan="{{ slip.books|length }}">
-                                            {% if slip.status != 'Đã trả' %}
+                                            {% if slip.status == 'Đang mượn' or slip.status == 'Quá hạn' %}
                                                 <button class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3"
                                                         onclick="openReturnModal({{ slip.slip_id }})">
-                                                    <i class="fa-solid fa-rotate-left me-1"></i> Trả sách
+                                                    <i class="fa-solid fa-rotate-left me-1"></i> Yêu cầu trả
                                                 </button>
+                                            {% elif slip.status == 'Chờ duyệt' %}
+                                                <span class="text-warning small fw-bold"><i class="fa-solid fa-clock me-1"></i>Đang chờ duyệt</span>
                                             {% else %}
                                                 <span class="text-muted small"><i class="fa-solid fa-check-double me-1"></i>Hoàn tất</span>
                                             {% endif %}
@@ -135,11 +140,11 @@
 
                 <h6 class="fw-bold text-secondary mb-2"><i class="fa-solid fa-book-open me-2"></i>Sách đang mượn:</h6>
                 <ul class="list-group list-group-flush mb-4" id="modalBookList">
-                    </ul>
+                </ul>
 
                 <div class="d-flex gap-2">
                     <button type="button" class="btn btn-light fw-bold flex-grow-1" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-success fw-bold flex-grow-1" id="btnConfirmReturn">Xác nhận trả</button>
+                    <button type="button" class="btn btn-success fw-bold flex-grow-1" id="btnConfirmReturn">Gửi yêu cầu</button>
                 </div>
             </div>
         </div>
