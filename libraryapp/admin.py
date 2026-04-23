@@ -1,7 +1,9 @@
 from flask_admin.contrib.sqla import ModelView
 from flask_admin import AdminIndexView, expose
-from flask import redirect, url_for
+from flask import redirect, url_for, flash
 from flask_login import current_user
+
+from libraryapp.dao.borrow_slips import confirm_return_borrow_slip
 from libraryapp.models import UserRole, Reader
 
 
@@ -11,7 +13,7 @@ class StandardAdminIndexView(AdminIndexView):
 
     @expose('/')
     def index(self):
-        return redirect(url_for('book.index_view'))  # QLsach
+        return redirect(url_for('book.index_view'))
 
 
 class AuthenticatedModelView(ModelView):
@@ -31,3 +33,17 @@ class BookView(AuthenticatedModelView):
 class UserView(AuthenticatedModelView):
     column_searchable_list = ['name', 'username', 'phone']
     column_exclude_list = ['password']
+
+
+class BorrowSlipView(AuthenticatedModelView):
+    column_list = ['id', 'reader_id', 'borrow_date', 'due_date', 'status', 'penalty_fee']
+    column_filters = ['status']
+
+    @expose('/approve_return/<int:slip_id>', methods=['POST'])
+    def approve_return(self, slip_id):
+        success, message = confirm_return_borrow_slip(slip_id)
+        if success:
+            flash(message, 'success')
+        else:
+            flash(message, 'error')
+        return redirect(url_for('borrowslip.index_view'))

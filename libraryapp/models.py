@@ -26,6 +26,7 @@ class BorrowSlipStatus(enum.Enum):
     BORROWING = 1  # Đang mượn
     RETURNED = 2   # Đã trả
     OVERDUE = 3    # Quá hạn
+    PENDING = 4 #DANG CHO
 
 class User(BaseModel, UserMixin):
     __tablename__ = 'user'

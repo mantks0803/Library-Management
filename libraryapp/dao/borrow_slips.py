@@ -6,7 +6,6 @@ from flask_login import current_user
 
 
 def create_borrow_slip_multiple(reader_id, book_ids, borrow_date=None, days=7):
-
     if not book_ids:
         return None, []
 
@@ -49,3 +48,29 @@ def create_borrow_slip_multiple(reader_id, book_ids, borrow_date=None, days=7):
         print(f"Lỗi khi tạo phiếu mượn nhiều sách: {e}")
         return None, []
 
+
+def request_return_borrow_slip(slip_id):
+    slip = BorrowSlip.query.get(slip_id)
+    if slip and slip.status != BorrowSlipStatus.RETURNED:
+        slip.status = BorrowSlipStatus.PENDING
+        db.session.commit()
+        return True, "Đã gửi yêu cầu trả sách. Vui lòng đợi Admin duyệt!"
+    return False, "Phiếu không hợp lệ!"
+
+
+def confirm_return_borrow_slip(slip_id):
+    slip = BorrowSlip.query.get(slip_id)
+    if not slip or slip.status != BorrowSlipStatus.PENDING:
+        return False, "Phiếu không ở trạng thái chờ duyệt!"
+
+    details = BorrowSlipDetail.query.filter_by(borrow_slip_id=slip_id, is_returned=False).all()
+    for detail in details:
+        detail.is_returned = True
+        detail.return_date = datetime.now()
+        book = Book.query.get(detail.book_id)
+        if book:
+            book.quantity += 1
+
+    slip.status = BorrowSlipStatus.RETURNED
+    db.session.commit()
+    return True, "Đã duyệt trả sách thành công!"
