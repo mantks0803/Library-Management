@@ -10,7 +10,7 @@ import cloudinary
 app = Flask(__name__)
 
 app.secret_key = "!@#$%jasbej%$^(+eiwqbacjfas12399HBAS59^##GSDFG%%jjs;zs4$$"
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:08032005@localhost/librarydb?charset=utf8mb4"
+app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://root:root@localhost/librarydb?charset=utf8mb4"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config['PAGE_SIZE'] = 50
 
@@ -30,8 +30,9 @@ admin = Admin(
 admin.add_view(BookView(Book, db.session, name="Quản Lý Sách"))
 admin.add_view(UserView(User, db.session, name="Quản Lý Người dùng"))
 admin.add_view(BorrowSlipView(BorrowSlip, db.session, name="Duyệt Trả Sách"))
-# cloudinary.config(
-#     cloud_name='dt1pa28g2',
-#     api_key='824465552867193',
-#     api_secret='A9MAKfzfQok2sZCjtIuhsDBTzis'
-# )
+
+cloudinary.config(
+    cloud_name='dprwsgoeg',
+    api_key='561165731845827',
+    api_secret='dUWu7WiILETcjr_Sn8sicQhhiW0'
+)

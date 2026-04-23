@@ -1,14 +1,11 @@
 from libraryapp.models import Book
 from libraryapp import db, app
+import cloudinary.uploader
 from sqlalchemy import and_
 
 
 def get_list_books(full=False, page=1, keyword=None, author=None, type=None):
-    """
-    Lấy danh sách sách với tìm kiếm và phân trang
-    - Có thể tìm theo: tên sách, tác giả, thể loại
-    - Tối đa 50 bản ghi mỗi trang
-    """
+
     query = Book.query
 
     if not full:
@@ -44,6 +41,22 @@ def get_book(id):
 def get_all_book_types():
     types = db.session.query(Book.type).filter(Book.active.is_(True)).distinct().all()
     return [t[0] for t in types if t[0]]
+
+
+def add_book(title, author, type, publish_year=None, quantity=1, avatar=None):
+    try:
+        new_book = Book(title=title, author=author, type=type, publish_year=publish_year, quantity=quantity)
+        if avatar:
+            res = cloudinary.uploader.upload(avatar)
+            new_book.avatar = res.get("secure_url")
+        db.session.add(new_book)
+        db.session.commit()
+
+        return True, new_book
+
+    except Exception as e:
+        db.session.rollback()
+        return False, str(e)
 
 
 

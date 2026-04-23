@@ -6,6 +6,9 @@ from flask import redirect, abort
 def hash_password(password):
     return hashlib.md5(password.strip().encode('utf-8')).hexdigest()
 
+def is_image(file):
+    return file.lower().endswith(('.jpg', '.jpeg', '.png'))
+
 def permission(allow=None):
     def decorator(function):
         @wraps(function)

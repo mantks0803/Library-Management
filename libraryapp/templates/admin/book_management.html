@@ -1,0 +1,228 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Quản Lý Sách - Thư viện OU{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+
+    <!-- Thông báo -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'success' %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold text-primary text-uppercase mb-0 border-start border-5 border-primary ps-3">
+            <i class="fa-solid fa-book me-2"></i> Quản Lý Sách
+        </h4>
+        <button class="btn btn-primary btn-sm fw-bold" data-bs-toggle="modal" data-bs-target="#addBookModal">
+            <i class="fa-solid fa-plus me-2"></i> Thêm Sách Mới
+        </button>
+    </div>
+
+    <!-- Thống kê -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card card-modern border-0 shadow-sm">
+                <div class="card-body d-flex align-items-center">
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-3 me-3">
+                        <i class="fa-solid fa-books text-primary fs-3"></i>
+                    </div>
+                    <div>
+                        <p class="text-muted mb-0 small">TỔNG SỐ SÁCH</p>
+                        <h3 class="fw-bold text-primary mb-0">{{ total_books }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Danh sách sách -->
+    <div class="card card-modern border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom p-4">
+            <h6 class="fw-bold text-dark mb-0">
+                <i class="fa-solid fa-list me-2"></i> Danh Sách Sách ({{ total_books }} cuốn)
+            </h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="bg-light text-secondary">
+                    <tr>
+                        <th class="ps-4 py-3 border-0">#</th>
+                        <th class="py-3 border-0">Tên Sách</th>
+                        <th class="py-3 border-0">Tác Giả</th>
+                        <th class="py-3 border-0">Thể Loại</th>
+                        <th class="py-3 border-0">Năm XB</th>
+                        <th class="py-3 border-0 text-center">Số Lượng</th>
+                        <th class="py-3 border-0 text-center">Trạng Thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if books %}
+                        {% for book in books %}
+                        <tr>
+                            <td class="ps-4 fw-bold text-muted">#{{ book.id }}</td>
+                            <td class="fw-bold text-dark">
+                                <div class="d-flex align-items-center gap-2">
+                                    {% if book.avatar %}
+                                        <img src="{{ book.avatar }}" alt="{{ book.title }}" style="width: 35px; height: 50px; object-fit: cover; border-radius: 4px;">
+                                    {% else %}
+                                        <i class="fa-solid fa-book text-muted" style="width: 35px; text-align: center;"></i>
+                                    {% endif %}
+                                    {{ book.title }}
+                                </div>
+                            </td>
+                            <td>{{ book.author }}</td>
+                            <td><span class="badge bg-info">{{ book.type }}</span></td>
+                            <td>{{ book.publish_year if book.publish_year else '-' }}</td>
+                            <td class="text-center">
+                                <span class="badge bg-primary">{{ book.quantity }}</span>
+                            </td>
+                            <td class="text-center">
+                                {% if book.quantity > 0 %}
+                                    <span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>Còn</span>
+                                {% else %}
+                                    <span class="badge bg-danger"><i class="fa-solid fa-xmark me-1"></i>Hết</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-inbox fs-3 mb-2 d-block"></i>
+                                Chưa có sách nào
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Phân trang -->
+    {% if pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center shadow-sm pagination-custom">
+            <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+                <a class="page-link py-2 px-3 fw-bold" href="/book?page=1">&laquo;</a>
+            </li>
+            {% for page_num in range(1, pages + 1) %}
+                <li class="page-item {% if current_page == page_num %}active{% endif %}">
+                    <a class="page-link py-2 px-3 fw-bold" href="/book?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+            {% endfor %}
+            <li class="page-item {% if current_page == pages %}disabled{% endif %}">
+                <a class="page-link py-2 px-3 fw-bold" href="/book?page={{ pages }}">&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+
+</div>
+
+<!-- Modal Thêm Sách -->
+<div class="modal fade" id="addBookModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow-lg">
+            <div class="modal-header bg-primary bg-opacity-10 border-0">
+                <h5 class="modal-title fw-bold text-primary">
+                    <i class="fa-solid fa-plus me-2"></i> Thêm Sách Mới
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="/book/add" enctype="multipart/form-data">
+                <div class="modal-body p-4">
+                    <div class="row g-3">
+                        <!-- Tên sách -->
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-secondary">Tên Sách <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="title" placeholder="Nhập tên sách..." required>
+                        </div>
+
+                        <!-- Tác giả -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-secondary">Tác Giả <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="author" placeholder="Nhập tên tác giả..." required>
+                        </div>
+
+                        <!-- Thể loại -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-secondary">Thể Loại <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control form-control-lg" name="type" placeholder="VD: Programming, Novel..." required>
+                        </div>
+
+                        <!-- Năm xuất bản -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-secondary">Năm Xuất Bản</label>
+                            <input type="number" class="form-control form-control-lg" name="publish_year" placeholder="VD: 2020" min="1900" max="2100">
+                        </div>
+
+                        <!-- Số lượng -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-secondary">Số Lượng</label>
+                            <input type="number" class="form-control form-control-lg" name="quantity" placeholder="1" value="1" min="1" required>
+                        </div>
+
+                        <!-- URL Avatar hoặc Upload File -->
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-secondary">Ảnh Bìa (Tải Lên)</label>
+                            <input type="file" class="form-control form-control-lg" id="avatar" name="avatar" accept="image/*" onchange="previewImage(event)">
+                            <small class="text-muted d-block mt-2">
+                                <i class="fa-solid fa-info-circle me-1"></i>
+                                Định dạng: JPG, PNG, GIF. Kích thước tối đa: 5MB
+                            </small>
+                            <!-- Preview ảnh -->
+                            <div id="imagePreview" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer border-0 bg-light">
+                    <button type="button" class="btn btn-secondary fw-bold" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary fw-bold px-4">
+                        <i class="fa-solid fa-save me-2"></i> Thêm Sách
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function previewImage(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('imagePreview');
+
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `
+                <div class="mt-3">
+                    <p class="text-muted small mb-2">Preview Ảnh:</p>
+                    <img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 250px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                </div>
+            `;
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = '';
+    }
+}
+</script>
+
+{% endblock %}
+

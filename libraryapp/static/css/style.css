@@ -79,6 +79,20 @@ body {
     justify-content: center;
     color: #dee2e6;
     border-bottom: 1px solid #f1f3f5;
+    overflow: hidden;
+    position: relative;
+}
+
+.book-thumbnail img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    padding: 10px;
+    transition: transform 0.3s ease;
+}
+
+.book-card:hover .book-thumbnail img {
+    transform: scale(1.05);
 }
 
 /* Phân trang (Pagination) */
