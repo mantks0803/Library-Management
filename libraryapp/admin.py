@@ -28,6 +28,7 @@ class AuthenticatedModelView(ModelView):
 class BookView(AuthenticatedModelView):
     column_searchable_list = ['title', 'author']
     column_filters = ['type', 'quantity']
+    column_list = ['id', 'title', 'author', 'type', 'publish_year', 'quantity', 'avatar']
 
 
 class UserView(AuthenticatedModelView):

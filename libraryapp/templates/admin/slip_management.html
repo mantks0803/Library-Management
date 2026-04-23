@@ -1,0 +1,245 @@
+{% extends 'layout/base.html' %}
+
+{% block title %}Quản Lý Phiếu Mượn - Thư viện OU{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-4">
+
+    <!-- Thông báo -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% if category == 'success' %}
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% else %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <!-- Header -->
+    <h4 class="fw-bold text-primary text-uppercase mb-4 border-start border-5 border-primary ps-3">
+        <i class="fa-solid fa-clipboard me-2"></i> Quản Lý Phiếu Mượn
+    </h4>
+
+    <!-- Thống kê - Cards -->
+    <div class="row mb-4 g-3">
+        <div class="col-md-6 col-lg-3">
+            <a href="/slip?status=pending" class="text-decoration-none">
+                <div class="card card-modern border-0 shadow-sm h-100 cursor-pointer transition">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-warning bg-opacity-10 p-3 rounded-3 me-3">
+                            <i class="fa-solid fa-hourglass-end text-warning fs-3"></i>
+                        </div>
+                        <div>
+                            <p class="text-muted mb-0 small">CHỜ DUYỆT</p>
+                            <h3 class="fw-bold text-warning mb-0">{{ total_pending }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <a href="/slip?status=borrowing" class="text-decoration-none">
+                <div class="card card-modern border-0 shadow-sm h-100 cursor-pointer transition">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-info bg-opacity-10 p-3 rounded-3 me-3">
+                            <i class="fa-solid fa-book-open-reader text-info fs-3"></i>
+                        </div>
+                        <div>
+                            <p class="text-muted mb-0 small">ĐANG MƯỢN</p>
+                            <h3 class="fw-bold text-info mb-0">{{ total_borrowing }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <a href="/slip?status=returned" class="text-decoration-none">
+                <div class="card card-modern border-0 shadow-sm h-100 cursor-pointer transition">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-success bg-opacity-10 p-3 rounded-3 me-3">
+                            <i class="fa-solid fa-check-circle text-success fs-3"></i>
+                        </div>
+                        <div>
+                            <p class="text-muted mb-0 small">ĐÃ TRẢ</p>
+                            <h3 class="fw-bold text-success mb-0">{{ total_returned }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <a href="/slip?status=overdue" class="text-decoration-none">
+                <div class="card card-modern border-0 shadow-sm h-100 cursor-pointer transition">
+                    <div class="card-body d-flex align-items-center">
+                        <div class="bg-danger bg-opacity-10 p-3 rounded-3 me-3">
+                            <i class="fa-solid fa-exclamation-circle text-danger fs-3"></i>
+                        </div>
+                        <div>
+                            <p class="text-muted mb-0 small">QUÁ HẠN</p>
+                            <h3 class="fw-bold text-danger mb-0">{{ total_overdue }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div class="mb-4">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'all' %}active{% endif %}" href="/slip?status=all">
+                    <i class="fa-solid fa-list me-2"></i>Tất Cả ({{ total_pending + total_borrowing + total_returned + total_overdue }})
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'pending' %}active{% endif %}" href="/slip?status=pending">
+                    <span class="badge bg-warning me-2">{{ total_pending }}</span>Chờ Duyệt
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'borrowing' %}active{% endif %}" href="/slip?status=borrowing">
+                    <span class="badge bg-info me-2">{{ total_borrowing }}</span>Đang Mượn
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'returned' %}active{% endif %}" href="/slip?status=returned">
+                    <span class="badge bg-success me-2">{{ total_returned }}</span>Đã Trả
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if status_filter == 'overdue' %}active{% endif %}" href="/slip?status=overdue">
+                    <span class="badge bg-danger me-2">{{ total_overdue }}</span>Quá Hạn
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Danh sách phiếu -->
+    <div class="card card-modern border-0 shadow-sm">
+        <div class="card-header bg-light border-bottom p-4">
+            <h6 class="fw-bold text-dark mb-0">
+                <i class="fa-solid fa-list me-2"></i> Danh Sách Phiếu ({{ total_slips }} phiếu)
+            </h6>
+        </div>
+        <div class="table-responsive">
+            <table class="table align-middle mb-0">
+                <thead class="bg-light text-secondary">
+                    <tr>
+                        <th class="ps-4 py-3 border-0">#</th>
+                        <th class="py-3 border-0">Độc Giả</th>
+                        <th class="py-3 border-0">Ngày Mượn</th>
+                        <th class="py-3 border-0">Hạn Trả</th>
+                        <th class="py-3 border-0">Số Sách</th>
+                        <th class="py-3 border-0 text-center">Trạng Thái</th>
+                        <th class="py-3 border-0 text-center">Phí Phạt</th>
+                        <th class="py-3 border-0 text-center">Hành Động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if slips %}
+                        {% for slip in slips %}
+                        <tr>
+                            <td class="ps-4 fw-bold text-muted">#{{ slip.id }}</td>
+                            <td class="fw-bold text-dark">
+                                {{ slip.reader.user.name }}
+                                <br>
+                                <small class="text-muted">{{ slip.reader.user.username }}</small>
+                            </td>
+                            <td>{{ slip.borrow_date.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ slip.due_date.strftime('%d/%m/%Y') }}</td>
+                            <td class="text-center">
+                                <span class="badge bg-primary">{{ slip.borrow_slip_details|length }}</span>
+                            </td>
+                            <td class="text-center">
+                                {% if slip.status.name == 'PENDING' %}
+                                    <span class="badge bg-warning"><i class="fa-solid fa-hourglass-end me-1"></i>Chờ Duyệt</span>
+                                {% elif slip.status.name == 'BORROWING' %}
+                                    <span class="badge bg-info"><i class="fa-solid fa-book-open-reader me-1"></i>Đang Mượn</span>
+                                {% elif slip.status.name == 'RETURNED' %}
+                                    <span class="badge bg-success"><i class="fa-solid fa-check me-1"></i>Đã Trả</span>
+                                {% elif slip.status.name == 'OVERDUE' %}
+                                    <span class="badge bg-danger"><i class="fa-solid fa-exclamation me-1"></i>Quá Hạn</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if slip.penalty_fee > 0 %}
+                                    <span class="badge bg-danger">{{ slip.penalty_fee }}₫</span>
+                                {% else %}
+                                    <span class="badge bg-secondary">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if slip.status.name == 'PENDING' %}
+                                    <form action="/slip/approve/{{ slip.id }}" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-sm btn-success fw-bold" title="Duyệt phiếu" onclick="return confirm('Bạn có chắc muốn duyệt phiếu này?')">
+                                            <i class="fa-solid fa-check me-1"></i>Duyệt
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8" class="text-center py-4 text-muted">
+                                <i class="fa-solid fa-inbox fs-3 mb-2 d-block"></i>
+                                Không có phiếu nào
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Phân trang -->
+    {% if pages > 1 %}
+    <nav aria-label="Page navigation" class="mt-4">
+        <ul class="pagination justify-content-center shadow-sm pagination-custom">
+            <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+                <a class="page-link py-2 px-3 fw-bold" href="/slip?status={{ status_filter }}&page=1">&laquo;</a>
+            </li>
+            {% for page_num in range(1, pages + 1) %}
+                <li class="page-item {% if current_page == page_num %}active{% endif %}">
+                    <a class="page-link py-2 px-3 fw-bold" href="/slip?status={{ status_filter }}&page={{ page_num }}">{{ page_num }}</a>
+                </li>
+            {% endfor %}
+            <li class="page-item {% if current_page == pages %}disabled{% endif %}">
+                <a class="page-link py-2 px-3 fw-bold" href="/slip?status={{ status_filter }}&page={{ pages }}">&raquo;</a>
+            </li>
+        </ul>
+    </nav>
+    {% endif %}
+
+</div>
+
+<style>
+    .cursor-pointer {
+        cursor: pointer;
+    }
+
+    .transition {
+        transition: all 0.3s ease;
+    }
+
+    .card-modern:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1) !important;
+    }
+</style>
+
+{% endblock %}
+

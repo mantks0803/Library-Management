@@ -56,6 +56,8 @@ class Book(BaseModel):
     __tablename__ = "book"
 
     title = Column(String(200), nullable=False)
+    avatar = Column(String(100),
+                    default='https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg')
     author = Column(String(100), nullable=False)
     type = Column(String(100), nullable=False)
     publish_year = Column(Integer, nullable=True)
@@ -94,16 +96,16 @@ def create_db():
 
 def insert_books():
     books = [
-        {"title": "Clean Code", "author": "Robert C. Martin", "type": "Programming", "publish_year": 2008, "quantity": 5},
-        {"title": "Design Patterns", "author": "Erich Gamma", "type": "Programming", "publish_year": 1994, "quantity": 3},
-        {"title": "Refactoring", "author": "Martin Fowler", "type": "Programming", "publish_year": 1999, "quantity": 4},
-        {"title": "The Pragmatic Programmer", "author": "Andrew Hunt", "type": "Programming", "publish_year": 1999, "quantity": 6},
-        {"title": "Introduction to Algorithms", "author": "Thomas H. Cormen", "type": "Computer Science", "publish_year": 2009, "quantity": 2},
-        {"title": "Python Crash Course", "author": "Eric Matthes", "type": "Programming", "publish_year": 2019, "quantity": 7},
-        {"title": "Fluent Python", "author": "Luciano Ramalho", "type": "Programming", "publish_year": 2015, "quantity": 3},
-        {"title": "Harry Potter", "author": "J.K. Rowling", "type": "Novel", "publish_year": 1997, "quantity": 5},
-        {"title": "Sherlock Holmes", "author": "Arthur Conan Doyle", "type": "Detective", "publish_year": 1892, "quantity": 4},
-        {"title": "Atomic Habits", "author": "James Clear", "type": "Self Help", "publish_year": 2018, "quantity": 6}
+        {"title": "Clean Code", "author": "Robert C. Martin", "type": "Programming", "publish_year": 2008, "quantity": 5, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939023/51E2055ZGUL._SL1000__h4wbyj.jpg"},
+        {"title": "Design Patterns", "author": "Erich Gamma", "type": "Programming", "publish_year": 1994, "quantity": 3, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939058/71sjeQGh7VL._SL1500__a1yg8u.jpg"},
+        {"title": "Refactoring", "author": "Martin Fowler", "type": "Programming", "publish_year": 1999, "quantity": 4, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939086/R_lbybty.jpg"},
+        {"title": "The Pragmatic Programmer", "author": "Andrew Hunt", "type": "Programming", "publish_year": 1999, "quantity": 6, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939116/91mSZ570DUL._SL1500__sjw8c6.jpg"},
+        {"title": "Introduction to Algorithms", "author": "Thomas H. Cormen", "type": "Computer Science", "publish_year": 2009, "quantity": 2, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939286/61O5SsbL8HL_rsv5rl.jpg"},
+        {"title": "Python Crash Course", "author": "Eric Matthes", "type": "Programming", "publish_year": 2019, "quantity": 7, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939324/OIP_leycyx.jpg"},
+        {"title": "Fluent Python", "author": "Luciano Ramalho", "type": "Programming", "publish_year": 2015, "quantity": 3, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
+        {"title": "Harry Potter", "author": "J.K. Rowling", "type": "Novel", "publish_year": 1997, "quantity": 5, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
+        {"title": "Sherlock Holmes", "author": "Arthur Conan Doyle", "type": "Detective", "publish_year": 1892, "quantity": 4, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
+        {"title": "Atomic Habits", "author": "James Clear", "type": "Self Help", "publish_year": 2018, "quantity": 6, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"}
     ]
 
     with app.app_context():
@@ -131,6 +133,6 @@ def init_all_data():
         db.session.commit()
 
 
-#if __name__ == "__main__":
-   # create_db()
-   # init_all_data()
+# if __name__ == "__main__":
+#    create_db()
+#    init_all_data()
