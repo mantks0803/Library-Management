@@ -1,5 +1,6 @@
 from libraryapp.models import Book
 from libraryapp import db, app
+import cloudinary.uploader
 from sqlalchemy import and_
 
 
@@ -43,22 +44,12 @@ def get_all_book_types():
 
 
 def add_book(title, author, type, publish_year=None, quantity=1, avatar=None):
-
-    try:
-        new_book = Book(
-            title=title,
-            author=author,
-            type=type,
-            publish_year=publish_year,
-            quantity=quantity,
-            avatar=avatar if avatar else 'https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg'
-        )
-        db.session.add(new_book)
-        db.session.commit()
-        return True, new_book
-    except Exception as e:
-        db.session.rollback()
-        return False, str(e)
+    new_book = Book(title=title, author=author, type=type, publish_year=publish_year, quantity=quantity)
+    if avatar:
+        res = cloudinary.uploader.upload(avatar)
+        new_book.avatar = res.get("secure_url")
+    db.session.add(new_book)
+    db.session.commit()
 
 
 

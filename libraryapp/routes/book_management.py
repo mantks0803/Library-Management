@@ -4,6 +4,7 @@ from libraryapp import app
 from libraryapp.models import UserRole
 from libraryapp.utils import permission
 from libraryapp.dao.books import get_list_books, count_books, add_book
+from libraryapp.utils import is_image
 import math
 
 book_management_bp = Blueprint('book_management', __name__)
@@ -49,8 +50,10 @@ def add_book_process():
         flash("Thể loại không được để trống!", "danger")
         return redirect("/book")
 
+    if not is_image(avatar.filename):
+        return render_template("admin/book_management.html", err_msg="File không hợp lệ!")
+
     try:
-        # Convert publish_year và quantity to int
         publish_year = int(publish_year) if publish_year else None
         quantity = int(quantity) if quantity and quantity.isdigit() else 1
 
@@ -65,7 +68,7 @@ def add_book_process():
             type=type_book,
             publish_year=publish_year,
             quantity=quantity,
-            avatar=avatar if avatar else None
+            avatar=avatar
         )
 
         if success:
