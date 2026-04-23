@@ -44,12 +44,19 @@ def get_all_book_types():
 
 
 def add_book(title, author, type, publish_year=None, quantity=1, avatar=None):
-    new_book = Book(title=title, author=author, type=type, publish_year=publish_year, quantity=quantity)
-    if avatar:
-        res = cloudinary.uploader.upload(avatar)
-        new_book.avatar = res.get("secure_url")
-    db.session.add(new_book)
-    db.session.commit()
+    try:
+        new_book = Book(title=title, author=author, type=type, publish_year=publish_year, quantity=quantity)
+        if avatar:
+            res = cloudinary.uploader.upload(avatar)
+            new_book.avatar = res.get("secure_url")
+        db.session.add(new_book)
+        db.session.commit()
+
+        return True, new_book
+
+    except Exception as e:
+        db.session.rollback()
+        return False, str(e)
 
 
 

@@ -35,7 +35,7 @@ def add_book_process():
     type_book = request.form.get("type", "").strip()
     publish_year = request.form.get("publish_year", "").strip()
     quantity = request.form.get("quantity", "1").strip()
-    avatar = request.form.get("avatar", "").strip()
+    avatar = request.files.get("avatar")
 
     # Validation
     if not title:
