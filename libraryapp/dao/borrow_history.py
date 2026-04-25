@@ -1,4 +1,4 @@
-from libraryapp.models import BorrowSlip, BorrowSlipDetail
+from libraryapp.models import BorrowSlip, BorrowSlipDetail, BorrowSlipStatus
 from libraryapp import db, app
 
 def get_reader_borrow_slips(reader_id, page=1):
@@ -24,3 +24,15 @@ def get_all_reader_borrow_details(reader_id):
     return db.session.query(BorrowSlipDetail).join(
         BorrowSlip, BorrowSlipDetail.borrow_slip_id == BorrowSlip.id
     ).filter(BorrowSlip.reader_id == reader_id).all()
+
+
+def count_reader_borrowing_books(reader_id):
+    count = db.session.query(BorrowSlipDetail).join(
+        BorrowSlip, BorrowSlipDetail.borrow_slip_id == BorrowSlip.id
+    ).filter(
+        BorrowSlip.reader_id == reader_id,
+        BorrowSlipDetail.is_returned == False,
+        BorrowSlip.status.in_([BorrowSlipStatus.BORROWING, BorrowSlipStatus.PENDING])
+    ).count()
+    return count
+

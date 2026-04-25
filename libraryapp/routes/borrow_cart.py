@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from libraryapp.utils import permission
 from libraryapp.dao.books import get_book
 from libraryapp.dao.borrow_slips import create_borrow_slip_multiple
+from libraryapp.dao.borrow_history import count_reader_borrowing_books
 from libraryapp.models import Reader, User, UserRole, BorrowSlip, BorrowSlipStatus
 from libraryapp.api.api_cart import get_cart, save_cart
 from libraryapp import db
@@ -31,11 +32,17 @@ def view_cart():
     borrow_date_str = borrow_date.strftime('%d/%m/%Y')
     due_date_str = due_date.strftime('%d/%m/%Y')
 
+    # Đếm số sách đang mượn
+    borrowing_count = count_reader_borrowing_books(current_user.id)
+    total_books = borrowing_count + len(cart)
+
     return render_template('reader/borrow_cart.html',
                          books=books,
                          borrow_date=borrow_date_str,
                          due_date=due_date_str,
-                         cart_count=len(cart))
+                         cart_count=len(cart),
+                         borrowing_count=borrowing_count,
+                         total_books=total_books)
 
 @borrow_bp.route('/cart/confirm', methods=['POST'])
 @permission(allow={
@@ -66,7 +73,17 @@ def confirm():
             'message': f'Bạn không thể mượn sách! Vui lòng trả sách quá hạn trước (Phiếu mượn #{overdue_slip.id}).'
         })
 
-    # 3. Tạo phiếu mượn
+    # 3. Kiểm tra số lượng sách mượn (tối đa 5 quyển)
+    borrowing_count = count_reader_borrowing_books(reader.id)
+    total_books = borrowing_count + len(cart)
+
+    if total_books > 5:
+        return jsonify({
+            'success': False,
+            'message': f'Bạn chỉ được mượn tối đa 5 quyển sách! Hiện tại bạn đang mượn {borrowing_count} quyển, thêm {len(cart)} quyển sẽ vượt quá giới hạn.'
+        })
+
+    # 4. Tạo phiếu mượn
     borrow_slip, details = create_borrow_slip_multiple(
         reader_id=reader.id,
         book_ids=cart,
