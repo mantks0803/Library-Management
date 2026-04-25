@@ -92,7 +92,14 @@
                     <div class="mb-4">
                         <h6 class="fw-bold text-muted mb-2"><i class="fa-solid fa-book me-2"></i>Sách Mượn</h6>
                         <div class="ps-3">
-                            <p class="mb-0"><strong>{{ cart_count }} quyển</strong></p>
+                            <div class="mb-2">
+                                <small class="text-muted">Đang mượn</small>
+                                <p class="mb-0"><strong>{{ borrowing_count }} quyển</strong></p>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted">Sách trong giỏ</small>
+                                <p class="mb-0"><strong>{{ cart_count }} quyển</strong></p>
+                            </div>
                         </div>
                     </div>
 
@@ -118,11 +125,19 @@
                     <!-- Ghi chú -->
                     <div class="alert alert-info small mb-3">
                         <i class="fa-solid fa-circle-info me-2"></i>
-                        <strong>Quy định:</strong> Mượn tối đa 7 ngày, có thể gia hạn 1 lần.
+                        <strong>Quy định:</strong> Mượn tối đa 7 ngày, mỗi lần tối đa 5 quyển.
                     </div>
 
+                    <!-- Cảnh báo nếu vượt quá 5 quyển -->
+                    {% if total_books > 5 %}
+                    <div class="alert alert-danger small mb-3">
+                        <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                        <strong>Cảnh báo:</strong> Bạn chỉ được mượn tối đa 5 quyển sách! Hiện tại bạn đang mượn {{ borrowing_count }} quyển, thêm {{ cart_count }} quyển sẽ vượt quá giới hạn.
+                    </div>
+                    {% endif %}
+
                     <!-- Nút xác nhận -->
-                    <button type="button" class="btn btn-success w-100 fw-bold py-3" style="font-size: 1.1rem;" onclick="confirmBorrow()">
+                    <button type="button" class="btn btn-success w-100 fw-bold py-3 {% if total_books > 5 %}disabled{% endif %}" style="font-size: 1.1rem;" onclick="confirmBorrow()">
                         <i class="fa-solid fa-check-circle me-2"></i>XÁC NHẬN MƯỢN
                     </button>
 
