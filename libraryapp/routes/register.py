@@ -5,7 +5,7 @@ register_bp = Blueprint("register", __name__)
 
 @register_bp.route("/register", methods=["GET"])
 def register_view():
-    return render_template("auth/register.html")
+    return render_template("auth/register.html",form={})
 
 @register_bp.route("/register", methods=["POST"])
 def register_process():
@@ -29,6 +29,8 @@ def register_process():
         users_dao.add_user(name=name, phone=phone, email=email, username=username, password=password)
         #succes
         return redirect("/login?success=1")
+    except ValueError as e:
+        return render_template("auth/register.html", form=request.form, err_msg=str(e))
     except Exception as ex:
         print(ex)
         return render_template("auth/register.html", err_msg="Lỗi hệ thống, vui lòng thử lại sau!")

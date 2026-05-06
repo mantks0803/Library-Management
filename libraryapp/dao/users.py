@@ -11,6 +11,16 @@ def auth_user(username, password):
     return User.query.filter(User.username == username, User.password == password).first()
 
 def add_user(name, phone, email, username, password):
+    if len(password) < 8:
+        raise ValueError('Password phải từ 8 kí tự trở lên!')
+    if not re.search(r'[0-9]', password):
+        raise ValueError('Password phải có số!')
+    if not re.search(r'[a-z]', password):
+        raise ValueError('Password phải có ký thường!')
+    if not re.search(r'[A-Z]', password):
+        raise ValueError('Password phải có ký tự hoa!')
+    if User.query.filter(User.username.__eq__(username)).first():
+        raise ValueError('Username đã tồn tại!')
     password = hash_password(password)
     user = User(name=name.strip(), phone=phone, email=email.strip(), username=username.strip(), password=password, user_role=UserRole.READER)
 
@@ -24,6 +34,8 @@ def add_user(name, phone, email, username, password):
 
 def update_user(user_id, name, phone):
     user = User.query.get(user_id)
+    if not re.match(r'^0\d{9}$', phone):
+        raise ValueError("Số điện thoại không hợp lệ!")
     user.name = name
     user.phone = phone
     db.session.commit()

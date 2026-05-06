@@ -9,11 +9,11 @@ def return_slip(slip_id, current_reader_id):
     try:
         slip = BorrowSlip.query.get(slip_id)
 
-        if slip.reader_id != current_reader_id:
-            return False, "Bạn không có quyền trả phiếu mượn này!"
-
         if not slip:
             return False, "Phiếu mượn không tồn tại!"
+
+        if slip.reader_id != current_reader_id:
+            return False, "Bạn không có quyền trả phiếu mượn này!"
 
         if slip.status == BorrowSlipStatus.RETURNED:
             return False, "Phiếu mươn này đã được trả rồi!"

@@ -10,6 +10,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const newName = document.getElementById('updateName').value;
             const newPhone = document.getElementById('updatePhone').value;
 
+            const phoneRegex = /^(03|05|07|08|09)\d{8}$/;
+            if (!phoneRegex.test(newPhone)) {
+                alert("Số điện thoại không hợp lệ!");
+                return;
+            }
+
             const formData = new FormData();
             formData.append('name', newName);
             formData.append('phone', newPhone);

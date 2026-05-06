@@ -1,3 +1,5 @@
+from flask import current_app
+
 from libraryapp.models import BorrowSlip, BorrowSlipDetail, BorrowSlipStatus
 from libraryapp import db, app
 
@@ -6,8 +8,8 @@ def get_reader_borrow_slips(reader_id, page=1):
     query = BorrowSlip.query.filter(BorrowSlip.reader_id == reader_id)
     count = query.count()
     query = query.order_by(BorrowSlip.borrow_date.desc())
-    start = (page - 1) * app.config.get('PAGE_SIZE', 10)
-    return query.slice(start, start + app.config.get('PAGE_SIZE', 10)).all(), count
+    start = (page - 1) * current_app.config.get('PAGE_SIZE', 10)
+    return query.slice(start, start + current_app.config.get('PAGE_SIZE', 10)).all(), count
 
 
 def get_borrow_slip(slip_id):
