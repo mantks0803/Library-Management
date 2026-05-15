@@ -35,11 +35,11 @@ def add_to_cart(book_id):
     if book_id in cart:
         return jsonify({'success': False, 'message': 'Sách đã có trong giỏ mượn!'})
 
-    cart.append(book_id)
-    save_cart(cart)
-
     if len(cart) >= 5:
         return jsonify({'success': False, 'message': 'Bạn chỉ có thể mượn tối đa 5 cuốn sách!'})
+
+    cart.append(book_id)
+    save_cart(cart)
 
     return jsonify({
         'success': True,
