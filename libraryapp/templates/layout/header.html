@@ -10,7 +10,8 @@
             {% if current_user.is_authenticated %}
 
             {% if current_user.user_role.name == 'READER' %}
-            {% set current_cart_count = session.get('borrow_cart', []) | length %}
+            {% set cart_session_key = 'borrow_cart_' ~ current_user.id %}
+            {% set current_cart_count = session.get(cart_session_key, []) | length %}
             <a href="/cart/view"
                class="btn btn-outline-light rounded-pill fw-medium px-3 py-2 border-opacity-25 shadow-sm position-relative">
                 <i class="fa-solid fa-shopping-cart fs-5"></i>

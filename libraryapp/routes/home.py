@@ -1,4 +1,4 @@
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request
 from libraryapp import login
 from flask import render_template
 from libraryapp.dao.users import get_current_user
@@ -16,28 +16,26 @@ def home():
     type = request.args.get("type")
     page = int(request.args.get("page", 1))
     err_msg = None
-    if keyword and len(keyword.strip()) < 2:
-        err_msg = "Nhập ít nhất 2 ký tự để tìm kiếm!"
-    if author and len(author.strip()) < 2:
-        err_msg = "Nhập ít nhất 2 ký tự để tìm kiếm!"
-    data_books = books.get_list_books(
-        page=page,
-        keyword=keyword,
-        author=author,
-        type=type
-    )
 
-    page_size = current_app.config['PAGE_SIZE']
-    pages = math.ceil(books.count_books() / page_size) if books.count_books() > 0 else 1
+    # Kiểm tra keyword - phải có ít nhất 2 ký tự
+    if (keyword and len(keyword.strip()) < 2) or (author and len(author.strip()) < 2):
+        err_msg = "Vui lòng nhập ít nhất 2 ký tự để tìm kiếm!"
+        data_books = []
+        pages = 0
+    else:
+        data_books = books.get_list_books(
+            page=page,
+            keyword=keyword,
+            author=author,
+            type=type
+        )
+
+        page_size = app.config['PAGE_SIZE']
+        pages = math.ceil(books.count_books() / page_size) if books.count_books() > 0 else 1
 
     types = books.get_all_book_types()
 
-
-    return render_template("index.html",
-                           books=data_books,
-                           err_msg=err_msg,
-                           pages=pages,
-                           types=types)
+    return render_template("index.html", books=data_books, pages=pages, types=types, err_msg=err_msg)
 
 
 @login.user_loader

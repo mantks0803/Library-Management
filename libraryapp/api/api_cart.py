@@ -9,12 +9,34 @@ api_cart_bp = Blueprint('api_cart', __name__)
 CART_SESSION_KEY = 'borrow_cart'
 
 
+def _get_cart_key():
+    """
+    Lấy session key duy nhất cho từng user
+    Đảm bảo mỗi user có giỏ riêng
+    """
+    if current_user.is_authenticated:
+        return f"{CART_SESSION_KEY}_{current_user.id}"
+    return CART_SESSION_KEY
+
+
 def get_cart():
-    return session.get(CART_SESSION_KEY, [])
+    cart_key = _get_cart_key()
+    return session.get(cart_key, [])
 
 
 def save_cart(cart):
-    session[CART_SESSION_KEY] = cart
+    cart_key = _get_cart_key()
+    session[cart_key] = cart
+    session.modified = True
+
+
+def clear_cart():
+    """
+    Plain function để xóa giỏ (dùng cho logout)
+    Không có decorator permission để tất cả user đều gọi được
+    """
+    cart_key = _get_cart_key()
+    session.pop(cart_key, None)
     session.modified = True
 
 
@@ -35,11 +57,11 @@ def add_to_cart(book_id):
     if book_id in cart:
         return jsonify({'success': False, 'message': 'Sách đã có trong giỏ mượn!'})
 
-    cart.append(book_id)
-    save_cart(cart)
-
     if len(cart) >= 5:
         return jsonify({'success': False, 'message': 'Bạn chỉ có thể mượn tối đa 5 cuốn sách!'})
+
+    cart.append(book_id)
+    save_cart(cart)
 
     return jsonify({
         'success': True,
@@ -68,8 +90,9 @@ def remove_from_cart(book_id):
     "roles": [UserRole.READER],
     "access": True
 })
-def clear_cart():
-    save_cart([])
+def clear_cart_api():
+    """API endpoint để xóa giỏ (dùng cho frontend)"""
+    clear_cart()
     return jsonify({'success': True, 'message': 'Giỏ mượn đã được xóa!'})
 
 @api_cart_bp.route('/cart/count', methods=['GET'])
