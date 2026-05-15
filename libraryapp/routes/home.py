@@ -15,20 +15,27 @@ def home():
     author = request.args.get("author")
     type = request.args.get("type")
     page = int(request.args.get("page", 1))
+    err_msg = None
 
-    data_books = books.get_list_books(
-        page=page,
-        keyword=keyword,
-        author=author,
-        type=type
-    )
+    # Kiểm tra keyword - phải có ít nhất 2 ký tự
+    if keyword and len(keyword.strip()) > 0 and len(keyword.strip()) < 2:
+        err_msg = "Vui lòng nhập ít nhất 2 ký tự để tìm kiếm!"
+        data_books = []
+        pages = 0
+    else:
+        data_books = books.get_list_books(
+            page=page,
+            keyword=keyword,
+            author=author,
+            type=type
+        )
 
-    page_size = app.config['PAGE_SIZE']
-    pages = math.ceil(books.count_books() / page_size) if books.count_books() > 0 else 1
+        page_size = app.config['PAGE_SIZE']
+        pages = math.ceil(books.count_books() / page_size) if books.count_books() > 0 else 1
 
     types = books.get_all_book_types()
 
-    return render_template("index.html", books=data_books, pages=pages, types=types)
+    return render_template("index.html", books=data_books, pages=pages, types=types, err_msg=err_msg)
 
 
 @login.user_loader

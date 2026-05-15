@@ -48,6 +48,15 @@
         </form>
     </div>
 
+    <!-- Thông báo lỗi -->
+    {% if err_msg %}
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="fa-solid fa-triangle-exclamation me-2"></i>
+        <strong>{{ err_msg }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+
     <h5 class="fw-bold text-primary text-uppercase mb-4 border-start border-5 border-warning ps-3">
         Sách có thể bạn quan tâm
     </h5>
@@ -91,9 +100,11 @@
         </ul>
     </nav>
     {% else %}
+    {% if not err_msg %}
     <div class="alert alert-danger mt-3 text-center">
         Không có sách nào phù hợp!
     </div>
+    {% endif %}
     {% endif %}
 
 </div>
