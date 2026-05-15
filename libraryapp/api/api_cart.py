@@ -9,12 +9,24 @@ api_cart_bp = Blueprint('api_cart', __name__)
 CART_SESSION_KEY = 'borrow_cart'
 
 
+def _get_cart_key():
+    """
+    Lấy session key duy nhất cho từng user
+    Đảm bảo mỗi user có giỏ riêng
+    """
+    if current_user.is_authenticated:
+        return f"{CART_SESSION_KEY}_{current_user.id}"
+    return CART_SESSION_KEY
+
+
 def get_cart():
-    return session.get(CART_SESSION_KEY, [])
+    cart_key = _get_cart_key()
+    return session.get(cart_key, [])
 
 
 def save_cart(cart):
-    session[CART_SESSION_KEY] = cart
+    cart_key = _get_cart_key()
+    session[cart_key] = cart
     session.modified = True
 
 
@@ -69,6 +81,9 @@ def remove_from_cart(book_id):
     "access": True
 })
 def clear_cart():
+    cart_key = _get_cart_key()
+    session.pop(cart_key, None)
+    session.modified = True
     save_cart([])
     return jsonify({'success': True, 'message': 'Giỏ mượn đã được xóa!'})
 
