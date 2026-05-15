@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 
 from libraryapp.utils import permission
 from libraryapp.dao.books import get_book
-from libraryapp.dao.borrow_slips import create_borrow_slip_multiple
+from libraryapp.dao.borrow_slips import create_borrow_slip_multiple, check_and_update_overdue_slips
 from libraryapp.dao.borrow_history import count_reader_borrowing_books
 from libraryapp.models import Reader, User, UserRole, BorrowSlip, BorrowSlipStatus
 from libraryapp.api.api_cart import get_cart, save_cart
@@ -53,6 +53,9 @@ def confirm():
     cart = get_cart()
 
     reader = Reader.query.get(current_user.id)
+
+    # 0. Cập nhật trạng thái OVERDUE tự động
+    check_and_update_overdue_slips()
 
     # 1. Kiểm tra tài khoản có bị khóa không
     if not reader or reader.status.name == 'LOCKED':

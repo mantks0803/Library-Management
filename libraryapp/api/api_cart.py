@@ -30,6 +30,16 @@ def save_cart(cart):
     session.modified = True
 
 
+def clear_cart():
+    """
+    Plain function để xóa giỏ (dùng cho logout)
+    Không có decorator permission để tất cả user đều gọi được
+    """
+    cart_key = _get_cart_key()
+    session.pop(cart_key, None)
+    session.modified = True
+
+
 @api_cart_bp.route('/cart/add/<int:book_id>', methods=['POST'])
 @permission(allow={
     "roles": [UserRole.READER],
@@ -80,11 +90,9 @@ def remove_from_cart(book_id):
     "roles": [UserRole.READER],
     "access": True
 })
-def clear_cart():
-    cart_key = _get_cart_key()
-    session.pop(cart_key, None)
-    session.modified = True
-    save_cart([])
+def clear_cart_api():
+    """API endpoint để xóa giỏ (dùng cho frontend)"""
+    clear_cart()
     return jsonify({'success': True, 'message': 'Giỏ mượn đã được xóa!'})
 
 @api_cart_bp.route('/cart/count', methods=['GET'])

@@ -3,7 +3,7 @@ from flask_login import current_user
 from libraryapp import app
 from libraryapp.models import UserRole, BorrowSlip, BorrowSlipStatus, BorrowSlipDetail, Book
 from libraryapp.utils import permission
-from libraryapp.dao.borrow_slips import confirm_return_borrow_slip
+from libraryapp.dao.borrow_slips import confirm_return_borrow_slip, check_and_update_overdue_slips
 from libraryapp import db
 import math
 
@@ -13,6 +13,9 @@ slip_management_bp = Blueprint('slip_management', __name__)
 @slip_management_bp.route('/slip', methods=['GET'])
 @permission(allow={"roles": [UserRole.ADMIN], "access": True})
 def slip_management():
+    # Cập nhật trạng thái OVERDUE tự động trước khi lấy dữ liệu
+    check_and_update_overdue_slips()
+
     status_filter = request.args.get("status", "all")
     page = int(request.args.get("page", 1))
 
