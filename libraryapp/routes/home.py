@@ -18,7 +18,7 @@ def home():
     err_msg = None
 
     # Kiểm tra keyword - phải có ít nhất 2 ký tự
-    if keyword and len(keyword.strip()) > 0 and len(keyword.strip()) < 2:
+    if (keyword and len(keyword.strip()) < 2) or (author and len(author.strip()) < 2):
         err_msg = "Vui lòng nhập ít nhất 2 ký tự để tìm kiếm!"
         data_books = []
         pages = 0
