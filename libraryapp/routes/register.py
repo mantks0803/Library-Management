@@ -20,7 +20,7 @@ def register_process():
     password = request.form.get("password")
     confirm = request.form.get("confirm")
     if not users_dao.validate_password(password, confirm):
-        return render_template("auth/register.html", err_msg="Mật khẩu không khớp, vui lòng nhập lại!")
+        return render_template("auth/register.html", err_msg="Mật khẩu không khớp, vui lòng nhập lại!", form=request.form)
 
     name = request.form.get("name")
     email = request.form.get("email")
