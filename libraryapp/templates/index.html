@@ -71,9 +71,9 @@
                     {% endif %}
                 </div>
                 <div class="card-body text-center d-flex flex-column p-4">
-                    <h5 class="fw-bold mb-2">{{ book.title }}</h5>
-                    <p class="text-muted mb-1">Tác giả: {{ book.author }}</p>
-                    <p class="text-muted mb-3">Thể loại: {{ book.type }}</p>
+                    <h5 class="fw-bold mb-2 card-title">{{ book.title }}</h5>
+                    <p class="text-muted mb-1 author-name">Tác giả: {{ book.author }}</p>
+                    <p class="text-muted mb-3 book-type">Thể loại: {{ book.type }}</p>
                     <button class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill" onclick="window.location.href='/book-detail/{{ book.id }}'">Xem chi tiết</button>
                 </div>
             </div>

@@ -25,7 +25,7 @@ def add_user(name, phone, email, username, password):
     user = User(name=name.strip(), phone=phone, email=email.strip(), username=username.strip(), password=password, user_role=UserRole.READER)
 
     db.session.add(user)
-    db.session.flush()  # Để lấy user.id
+    db.session.flush()
 
     reader = Reader(id=user.id)
     db.session.add(reader)

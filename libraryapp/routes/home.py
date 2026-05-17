@@ -1,4 +1,6 @@
 from flask import Blueprint, request
+from sympy.parsing.sympy_parser import null
+
 from libraryapp import login
 from flask import render_template
 from libraryapp.dao.users import get_current_user
@@ -17,8 +19,9 @@ def home():
     page = int(request.args.get("page", 1))
     err_msg = None
 
-    # Kiểm tra keyword - phải có ít nhất 2 ký tự
-    if (keyword and len(keyword.strip()) < 2) or (author and len(author.strip()) < 2):
+
+    if (((keyword and len(keyword.strip()) < 2) or (keyword == null and type == null))
+            or ((author and len(author.strip()) < 2) or (keyword == null and type == null))):
         err_msg = "Vui lòng nhập ít nhất 2 ký tự để tìm kiếm!"
         data_books = []
         pages = 0

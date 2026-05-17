@@ -1,3 +1,4 @@
+import hashlib
 from datetime import datetime, timedelta
 
 import pytest
@@ -64,10 +65,12 @@ def test_client(test_app):
 
 @pytest.fixture
 def sample_user(test_session):
-    u = User(
-        name='Tester', username='tester', password='Abc123@',
-        phone='0848482273', email='test@gmail.com', user_role=UserRole.READER
-    )
+    u = User(name="Nguyen Van A",
+             username='tester',
+             password=hashlib.md5('Abc1234@'.encode('utf-8')).hexdigest(),
+             phone='0848482273',
+             email='test@gmail.com',
+             user_role=UserRole.READER)
     test_session.add(u)
     test_session.commit()
     return u
@@ -181,4 +184,7 @@ def mock_cloudinary(monkeypatch):
         'libraryapp.dao.books.cloudinary.uploader.upload',
         fake_upload
     )
+
+
+
 
