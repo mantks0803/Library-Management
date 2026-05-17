@@ -101,7 +101,7 @@ def insert_books():
         {"title": "Refactoring", "author": "Martin Fowler", "type": "Programming", "publish_year": 1999, "quantity": 4, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939086/R_lbybty.jpg"},
         {"title": "The Pragmatic Programmer", "author": "Andrew Hunt", "type": "Programming", "publish_year": 1999, "quantity": 6, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939116/91mSZ570DUL._SL1500__sjw8c6.jpg"},
         {"title": "Introduction to Algorithms", "author": "Thomas H. Cormen", "type": "Computer Science", "publish_year": 2009, "quantity": 2, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939286/61O5SsbL8HL_rsv5rl.jpg"},
-        {"title": "Python Crash Course", "author": "Eric Matthes", "type": "Programming", "publish_year": 2019, "quantity": 7, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939324/OIP_leycyx.jpg"},
+        {"title": "Python Crash Course", "author": "Eric Matthes", "type": "Programming", "publish_year": 2019, "quantity": 27, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939324/OIP_leycyx.jpg"},
         {"title": "Fluent Python", "author": "Luciano Ramalho", "type": "Programming", "publish_year": 2015, "quantity": 3, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
         {"title": "Harry Potter", "author": "J.K. Rowling", "type": "Novel", "publish_year": 1997, "quantity": 5, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
         {"title": "Sherlock Holmes", "author": "Arthur Conan Doyle", "type": "Detective", "publish_year": 1892, "quantity": 4, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
@@ -591,13 +591,19 @@ def insert_books():
             db.session.add(Book(**b))
         db.session.commit()
 
+
 def create_user_base(name, phone, email, username, password, role):
     password = hash_password(password)
     user = User(name=name, phone=phone, email=email, username=username, password=password, user_role=role)
     db.session.add(user)
-    db.session.flush()
-    return user
 
+    db.session.flush()
+
+    if role == UserRole.READER:
+        reader = Reader(id=user.id, status=ReaderStatus.ACTIVE)
+        db.session.add(reader)
+
+    return user
 def init_all_data():
     with app.app_context():
         db.drop_all()
