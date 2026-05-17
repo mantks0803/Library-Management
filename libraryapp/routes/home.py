@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from sympy.parsing.sympy_parser import null
+from sqlalchemy import Null
 
 from libraryapp import login
 from flask import render_template
@@ -20,8 +20,8 @@ def home():
     err_msg = None
 
 
-    if (((keyword and len(keyword.strip()) < 2) or (keyword == null and type == null))
-            or ((author and len(author.strip()) < 2) or (keyword == null and type == null))):
+    if (((keyword and len(keyword.strip()) < 2) or (keyword == Null and type == Null))
+            or ((author and len(author.strip()) < 2) or (keyword == Null and type == Null))):
         err_msg = "Vui lòng nhập ít nhất 2 ký tự để tìm kiếm!"
         data_books = []
         pages = 0
