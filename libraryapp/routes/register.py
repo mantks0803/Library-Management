@@ -27,7 +27,7 @@ def register_process():
 
     try:
         users_dao.add_user(name=name, phone=phone, email=email, username=username, password=password)
-        #succes
+
         return redirect("/login?success=1")
     except ValueError as e:
         return render_template("auth/register.html", form=request.form, err_msg=str(e))
