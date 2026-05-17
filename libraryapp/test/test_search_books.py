@@ -81,27 +81,15 @@ def test_get_list_books_filter_type(test_session, sample_books):
     assert all("Programming" in b.type for b in books)
 
 def test_add_book_with_avatar(test_session, mock_cloudinary):
-    success, book = add_book(
-        title="Test",
-        author="A",
-        type="Test",
-        avatar="fake"
-    )
+    success, book = add_book(title="Test", author="A", type="Test", avatar="fake",publish_year=2026, quantity=20)
 
     assert success is True
     assert book.avatar == "https://fake-image.png"
 
-def test_add_book_commit_fail(test_session, mocker):
-    mocker.patch(
-        "libraryapp.dao.books.db.session.commit",
-        side_effect=Exception("DB error")
-    )
+def test_add_book_failed(test_session, mocker):
+    mocker.patch("libraryapp.dao.books.db.session.commit", side_effect=Exception("DB error"))
 
-    success, error = add_book(
-        title="Test",
-        author="A",
-        type="Test"
-    )
+    success, error = add_book(title="Test book", author="author test", type="Test")
 
     assert success is False
     assert "DB error" in error

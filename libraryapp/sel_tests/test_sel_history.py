@@ -3,7 +3,6 @@ from libraryapp.sel_tests.pages.HistoryPage import HistoryPage
 
 
 def setup_borrow_data(page):
-    #nhớ tạo tk nha tr
     page.login("tester", "Th@nhman08032005")
     time.sleep(1)
     page.add_to_cart()
