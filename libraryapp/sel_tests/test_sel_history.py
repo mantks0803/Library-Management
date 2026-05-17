@@ -5,8 +5,8 @@ from selenium.webdriver.common.by import By
 def test_history_borrow(driver):
 
     driver.get("http://127.0.0.1:5000/login")
-    driver.find_element(By.NAME, "username").send_keys("tester")
-    driver.find_element(By.NAME, "password").send_keys("Th@nhman08032005")
+    driver.find_element(By.NAME, "username").send_keys("ndqbao")
+    driver.find_element(By.NAME, "password").send_keys("Abc1234@")
 
     btn_login = driver.find_element(By.XPATH, "//button[contains(., 'ĐĂNG NHẬP')]")
     driver.execute_script("arguments[0].click();", btn_login)

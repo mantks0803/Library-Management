@@ -607,7 +607,7 @@ def init_all_data():
     with app.app_context():
         create_user_base("Nguyễn Thanh Thuận", "0334903055","thuan@gmail.com", "admin", "123", UserRole.ADMIN)
         create_user_base("Nguyễn Thanh Mẫn", "0334903355","dephucau@gmail.com", "man", "123", UserRole.READER)
-
+        create_user_base("Nguyễn Dương Quốc Bảo","0848482273","ndqba@gmail.com", "ndqbao", "Abc1234@", UserRole.READER)
         db.session.commit()
 
 
