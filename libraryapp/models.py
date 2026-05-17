@@ -122,7 +122,7 @@ def insert_books():
          "publish_year": 2009, "quantity": 2,
          "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939286/61O5SsbL8HL_rsv5rl.jpg"},
         {"title": "Python Crash Course", "author": "Eric Matthes", "type": "Programming", "publish_year": 2019,
-         "quantity": 7, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939324/OIP_leycyx.jpg"},
+         "quantity": 20, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939324/OIP_leycyx.jpg"},
         {"title": "Fluent Python", "author": "Luciano Ramalho", "type": "Programming", "publish_year": 2015,
          "quantity": 3, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
         {"title": "Harry Potter", "author": "J.K. Rowling", "type": "Novel", "publish_year": 1997, "quantity": 5,
@@ -607,7 +607,7 @@ def init_all_data():
     with app.app_context():
         create_user_base("Nguyễn Thanh Thuận", "0334903055","thuan@gmail.com", "admin", "123", UserRole.ADMIN)
         create_user_base("Nguyễn Thanh Mẫn", "0334903355","dephucau@gmail.com", "man", "123", UserRole.READER)
-
+        create_user_base("Mẫn", "0364341310", "dephucau@gmail.com", "tester", "Th@nhman08032005", UserRole.READER)
         db.session.commit()
 
 
