@@ -1,5 +1,3 @@
-from flask import current_app
-
 from libraryapp.models import Book
 from libraryapp import db, app
 import cloudinary.uploader
@@ -23,7 +21,7 @@ def get_list_books(full=False, page=1, keyword=None, author=None, type=None):
         query = query.filter(Book.type.ilike(f'%{type.strip()}%'))
 
     if page:
-        page_size = current_app.config['PAGE_SIZE']  # 50 bản ghi/trang
+        page_size = app.config['PAGE_SIZE']
         start = (page - 1) * page_size
         query = query.slice(start, start + page_size)
 
