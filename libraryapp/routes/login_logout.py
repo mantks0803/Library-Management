@@ -3,6 +3,8 @@ from libraryapp.dao.users import auth_user
 from libraryapp.api.api_cart import clear_cart
 from flask_login import login_user, logout_user, login_required
 
+from libraryapp.utils import permission
+
 login_logout_bp = Blueprint('login_logout', __name__)
 
 
@@ -35,6 +37,6 @@ def login_process():
 
 
 @login_logout_bp.route('/profile')
-@login_required
+@permission()
 def profile_view():
     return render_template('auth/profile.html')

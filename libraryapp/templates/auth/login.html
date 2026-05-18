@@ -20,11 +20,15 @@
             </div>
             {% endif %}
 
-            {% if request.args.get('success') %}
-            <div class="alert alert-success text-center fw-bold" role="alert">
-                <i class="fa-solid fa-circle-check"></i> Đăng ký thành công! Vui lòng đăng nhập.
-            </div>
-            {% endif %}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} text-center fw-bold" role="alert">
+                            <i class="fa-solid fa-circle-check"></i> {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
 
             <form method="POST">
                 <div class="mb-3">
