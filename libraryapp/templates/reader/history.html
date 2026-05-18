@@ -26,6 +26,7 @@
                             <th class="py-3 border-0">Hạn trả</th>
                             <th class="py-3 border-0">Ngày trả thực tế</th>
                             <th class="py-3 border-0 text-center">Trạng thái</th>
+                            <th class="py-3 border-0 text-center">Phí phạt</th>
                             <th class="py-3 border-0 text-center">Thao tác</th>
                         </tr>
                     </thead>
@@ -78,6 +79,16 @@
 
                                     {% if loop.first %}
                                         <td class="text-center" rowspan="{{ slip.books|length }}">
+                                            {% if slip.penalty_fee and slip.penalty_fee > 0 %}
+                                                <span class="badge bg-danger rounded-pill px-3 py-2">{{ "{:,.0f}".format(slip.penalty_fee) }}đ</span>
+                                            {% else %}
+                                                <span class="text-muted small">0đ</span>
+                                            {% endif %}
+                                        </td>
+                                    {% endif %}
+
+                                    {% if loop.first %}
+                                        <td class="text-center" rowspan="{{ slip.books|length }}">
                                             {% if slip.status == 'Đang mượn' or slip.status == 'Quá hạn' %}
                                                 <button class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3"
                                                         onclick="openReturnModal({{ slip.slip_id }})">
@@ -95,7 +106,7 @@
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="7" class="text-center py-5">
+                                <td colspan="8" class="text-center py-5">
                                     <div class="text-muted opacity-75">
                                         <i class="fa-solid fa-box-open mb-3" style="font-size: 3rem;"></i>
                                         <p class="mb-0 fw-medium">Bạn chưa mượn cuốn sách nào!</p>
