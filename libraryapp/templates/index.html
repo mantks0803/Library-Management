@@ -13,21 +13,25 @@
 
     <div class="card card-modern p-4 mb-5 border-0">
         {% if err_msg %}
-            <div class="alert alert-danger text-center " role="alert">
-                {{ err_msg }}
-            </div>
+        <div class="alert alert-danger text-center " role="alert">
+            {{ err_msg }}
+        </div>
         {% endif %}
         <form action="/" method="GET">
             <div class="row g-3 align-items-center">
                 <div class="col-md-9">
                     <div class="input-group input-group-lg shadow-sm">
-                        <span class="input-group-text bg-white border-primary text-primary"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" class="form-control border-primary" placeholder="Nhập tên sách cần tìm (tối thiểu 2 ký tự)..." name="keyword">
+                        <span class="input-group-text bg-white border-primary text-primary"><i
+                                class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" class="form-control border-primary"
+                               placeholder="Nhập tên sách cần tìm (tối thiểu 2 ký tự)..." name="keyword"
+                               value="{{ keyword if keyword else '' }}">
                     </div>
                 </div>
                 <div class="col-md-3 d-flex gap-2">
                     <button class="btn btn-primary btn-lg fw-bold flex-grow-1 shadow-sm" type="submit">TÌM KIẾM</button>
-                    <button class="btn btn-outline-secondary btn-lg shadow-sm" type="button" data-bs-toggle="collapse" href="#advancedFilter" aria-expanded="false">
+                    <button class="btn btn-outline-secondary btn-lg shadow-sm" type="button" data-bs-toggle="collapse"
+                            href="#advancedFilter" aria-expanded="false">
                         <i class="fa-solid fa-sliders"></i>
                     </button>
                 </div>
@@ -37,14 +41,16 @@
                 <div class="row g-3 bg-light p-4 rounded-3 border">
                     <div class="col-md-6">
                         <label class="form-label fw-bold text-secondary">Tên tác giả</label>
-                        <input type="text" class="form-control form-control-lg" placeholder="Nhập tên tác giả..." name="author">
+                        <input type="text" class="form-control form-control-lg" placeholder="Nhập tên tác giả..."
+                               name="author" value="{{ author if author else '' }}">
                     </div>
                     <div class="col-md-6">
                         <label class="form-label fw-bold text-secondary">Thể loại</label>
                         <select class="form-select form-select-lg" name="type">
                             <option value="">-- Tất cả thể loại --</option>
                             {% for type in types %}
-                            <option value="{{ type }}">{{ type }}</option>
+                            <option value="{{ type }}" {% if type== selected_type %}selected{% endif %}>{{ type }}
+                            </option>
                             {% endfor %}
                         </select>
                     </div>
@@ -63,9 +69,11 @@
         {% for book in books %}
         <div class="col">
             <div class="card book-card h-100 shadow-sm">
-                <div class="book-thumbnail d-flex align-items-center justify-content-center" style="background-color: #f8f9fa; height: 200px; overflow: hidden;">
+                <div class="book-thumbnail d-flex align-items-center justify-content-center"
+                     style="background-color: #f8f9fa; height: 200px; overflow: hidden;">
                     {% if book.avatar %}
-                    <img src="{{ book.avatar }}" alt="{{ book.title }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                    <img src="{{ book.avatar }}" alt="{{ book.title }}"
+                         style="max-height: 100%; max-width: 100%; object-fit: contain;">
                     {% else %}
                     <i class="fa-solid fa-book-journal-whills fs-1 text-muted"></i>
                     {% endif %}
@@ -74,7 +82,9 @@
                     <h5 class="fw-bold mb-2 card-title">{{ book.title }}</h5>
                     <p class="text-muted mb-1 author-name">Tác giả: {{ book.author }}</p>
                     <p class="text-muted mb-3 book-type">Thể loại: {{ book.type }}</p>
-                    <button class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill" onclick="window.location.href='/book-detail/{{ book.id }}'">Xem chi tiết</button>
+                    <button class="btn btn-outline-primary w-100 mt-auto fw-bold rounded-pill"
+                            onclick="window.location.href='/book-detail/{{ book.id }}'">Xem chi tiết
+                    </button>
                 </div>
             </div>
         </div>
@@ -83,7 +93,7 @@
 
     <nav aria-label="Page navigation" class="mt-4 mb-5">
         <ul class="pagination justify-content-center shadow-sm pagination-custom">
-            <li class="page-item {% if pages == 1 %}disabled{% endif %}" >
+            <li class="page-item {% if pages == 1 %}disabled{% endif %}">
                 <a class="page-link py-2 px-3 fw-bold" href="/?page=1" tabindex="-1" aria-disabled="true">&lt;</a>
             </li>
             {% for page_num in range(1, pages + 1) %}
@@ -96,11 +106,12 @@
             </li>
         </ul>
     </nav>
+
+    {% endif %}
     {% if not err_msg and not books %}
     <div class="alert alert-danger mt-3 text-center">
         Không có sách nào phù hợp!
     </div>
-    {% endif %}
     {% endif %}
 
 </div>

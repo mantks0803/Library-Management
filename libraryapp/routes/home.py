@@ -1,5 +1,5 @@
 from flask import Blueprint, request
-from sqlalchemy import Null
+from sympy.parsing.sympy_parser import null
 
 from libraryapp import login
 from flask import render_template
@@ -17,12 +17,19 @@ def home():
     author = request.args.get("author")
     type = request.args.get("type")
     page = int(request.args.get("page", 1))
+
+
     err_msg = None
 
+    is_searching = 'keyword' in request.args
 
-    if (((keyword and len(keyword.strip()) < 2) or (keyword == Null and type == Null))
-            or ((author and len(author.strip()) < 2) or (keyword == Null and type == Null))):
-        err_msg = "Vui lòng nhập ít nhất 2 ký tự để tìm kiếm!"
+    if is_searching:
+        if not keyword and not author and not type:
+            err_msg = "Vui lòng nhập ít nhất 1 điều kiện để tìm kiếm!"
+        elif (keyword and len(keyword) < 2) or (author and len(author) < 2):
+            err_msg = "Vui lòng nhập ít nhất 2 ký tự đối với tên sách hoặc tên tác giả!"
+
+    if err_msg:
         data_books = []
         pages = 0
     else:
@@ -38,7 +45,8 @@ def home():
 
     types = books.get_all_book_types()
 
-    return render_template("index.html", books=data_books, pages=pages, types=types, err_msg=err_msg)
+    return render_template("index.html", books=data_books, pages=pages, types=types, err_msg=err_msg,
+                           keyword=keyword, author=author, selected_type=type)
 
 
 @login.user_loader
