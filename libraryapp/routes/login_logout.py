@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect
 from libraryapp.dao.users import auth_user
 from libraryapp.api.api_cart import clear_cart
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 
 from libraryapp.utils import permission
 
@@ -10,12 +10,13 @@ login_logout_bp = Blueprint('login_logout', __name__)
 
 @login_logout_bp.route('/login')
 def render_login():
+    if current_user.is_authenticated:
+        return redirect('/')
     return render_template('auth/login.html')
 
 
 @login_logout_bp.route('/logout')
 def logout_process():
-    # Xóa giỏ mượn TRƯỚC khi đăng xuất (vẫn có current_user.id)
     clear_cart()
     logout_user()
     return redirect('/login')
