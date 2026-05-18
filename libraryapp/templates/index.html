@@ -17,6 +17,12 @@
                 {{ err_msg }}
             </div>
         {% endif %}
+        {% if remaining_overdue and remaining_overdue > 0 %}
+        <div class="alert alert-warning text-center fw-bold shadow-sm" role="alert">
+            <i class="fa-solid fa-triangle-exclamation me-2"></i>
+            Bạn đang có {{ remaining_overdue }} phiếu mượn quá hạn. Vui lòng trả sách và đóng phạt tại thư viện để mở khóa tài khoản!
+        </div>
+        {% endif %}
         <form action="/" method="GET">
             <div class="row g-3 align-items-center">
                 <div class="col-md-9">

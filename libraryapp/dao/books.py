@@ -27,8 +27,22 @@ def get_list_books(full=False, page=1, keyword=None, author=None, type=None):
 
     return query.all()
 
-def count_books():
-    return Book.query.count()
+def count_books(full=False, keyword=None, author=None, type=None):
+    query = Book.query
+
+    if not full:
+        query = query.filter(Book.active.is_(True))
+
+    if keyword and len(keyword.strip()) >= 2:
+        query = query.filter(Book.title.ilike(f'%{keyword.strip()}%'))
+
+    if author and len(author.strip()) >= 2:
+        query = query.filter(Book.author.ilike(f'%{author.strip()}%'))
+
+    if type and len(type.strip()) >= 2:
+        query = query.filter(Book.type.ilike(f'%{type.strip()}%'))
+
+    return query.count()
 
 def get_book(id):
     return Book.query.get(id)
