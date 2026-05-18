@@ -1,5 +1,4 @@
 from flask import Blueprint, request
-from sqlalchemy import Null
 
 from libraryapp import login
 from flask import render_template
@@ -20,8 +19,7 @@ def home():
     err_msg = None
 
 
-    if (((keyword and len(keyword.strip()) < 2) or (keyword == Null and type == Null))
-            or ((author and len(author.strip()) < 2) or (keyword == Null and type == Null))):
+    if (keyword and len(keyword.strip()) < 2) or (author and len(author.strip()) < 2):
         err_msg = "Vui lòng nhập ít nhất 2 ký tự để tìm kiếm!"
         data_books = []
         pages = 0
@@ -34,11 +32,12 @@ def home():
         )
 
         page_size = app.config['PAGE_SIZE']
-        pages = math.ceil(books.count_books() / page_size) if books.count_books() > 0 else 1
+        total_books = books.count_books(keyword=keyword, author=author, type=type)
+        pages = math.ceil(total_books / page_size) if total_books > 0 else 1
 
     types = books.get_all_book_types()
 
-    return render_template("index.html", books=data_books, pages=pages, types=types, err_msg=err_msg)
+    return render_template("index.html", books=data_books, pages=pages, types=types, err_msg=err_msg, current_page=page)
 
 
 @login.user_loader
