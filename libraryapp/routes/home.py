@@ -2,16 +2,30 @@ from flask import Blueprint, request
 
 from libraryapp import login
 from flask import render_template
+
+from libraryapp.dao.borrow_history import get_borrow_slip_status_overdue
+from libraryapp.dao.borrow_slips import check_and_update_overdue_slips
+from libraryapp.dao.readers import get_reader
 from libraryapp.dao.users import get_current_user
 from libraryapp import app
 import math
 from libraryapp.dao import books
-
+from flask_login import current_user
 home_bp = Blueprint('home', __name__)
 
 
 @home_bp.route('/')
 def home():
+    check_and_update_overdue_slips()
+    remaining_overdue = 0
+
+    if current_user.is_authenticated:
+        user = get_current_user(current_user.id)
+        reader = get_reader(user.id)
+
+        if reader:
+            remaining_overdue = len(get_borrow_slip_status_overdue(reader.id))
+
     keyword = request.args.get("keyword")
     author = request.args.get("author")
     type = request.args.get("type")
@@ -37,7 +51,7 @@ def home():
 
     types = books.get_all_book_types()
 
-    return render_template("index.html", books=data_books, pages=pages, types=types, err_msg=err_msg, current_page=page)
+    return render_template("index.html", books=data_books, pages=pages, types=types, err_msg=err_msg, remaining_overdue=remaining_overdue)
 
 
 @login.user_loader

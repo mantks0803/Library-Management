@@ -6,7 +6,7 @@ from libraryapp.dao.books import get_book
 from libraryapp.dao.readers import get_reader
 from libraryapp.dao.borrow_history import get_reader_borrow_slips
 from libraryapp.models import BorrowSlipStatus, UserRole
-from libraryapp.dao.borrow_slips import request_return_borrow_slip, check_and_update_overdue_slips
+from libraryapp.dao.borrow_slips import request_return_borrow_slip
 from datetime import datetime
 
 history_bp = Blueprint('borrow_history', __name__)
@@ -17,9 +17,6 @@ history_bp = Blueprint('borrow_history', __name__)
     "access": True
 })
 def render_borrow_history():
-    # Cập nhật trạng thái OVERDUE tự động trước khi lấy dữ liệu
-    check_and_update_overdue_slips()
-
     user = get_current_user(current_user.id)
     reader = get_reader(user.id)
 

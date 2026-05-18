@@ -2,6 +2,7 @@ from flask import current_app
 
 from libraryapp.models import BorrowSlip, BorrowSlipDetail, BorrowSlipStatus
 from libraryapp import db, app
+from sqlalchemy import and_
 
 def get_reader_borrow_slips(reader_id, page=1):
 
@@ -12,8 +13,14 @@ def get_reader_borrow_slips(reader_id, page=1):
     return query.slice(start, start + current_app.config.get('PAGE_SIZE', 10)).all(), count
 
 
-def get_borrow_slip(slip_id):
-    return BorrowSlip.query.get(slip_id)
+def get_borrow_slip_status_overdue(reader_id):
+    slips = BorrowSlip.query.filter(
+        and_(
+            BorrowSlip.reader_id == reader_id,
+            BorrowSlip.status == BorrowSlipStatus.OVERDUE
+        )
+    )
+    return slips.all()
 
 
 def get_borrow_slip_details(slip_id):

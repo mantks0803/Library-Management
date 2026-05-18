@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from libraryapp import db, app
+from libraryapp.dao.borrow_history import get_borrow_slip_status_overdue
 from libraryapp.models import BorrowSlip, BorrowSlipDetail, Book, Reader, User, UserRole, BorrowSlipStatus, ReaderStatus
 from sqlalchemy import and_, func, or_
 from flask_login import current_user
@@ -59,61 +60,42 @@ def request_return_borrow_slip(slip_id):
 
 
 def confirm_return_borrow_slip(slip_id):
-    try:
-        slip = BorrowSlip.query.get(slip_id)
+    slip = BorrowSlip.query.get(slip_id)
+    if not slip or slip.status != BorrowSlipStatus.PENDING:
+        return False, "Phiếu không ở trạng thái chờ duyệt!"
 
-        if not slip or slip.status != BorrowSlipStatus.PENDING:
-            return False, "Phiếu không ở trạng thái chờ duyệt!"
+    details = BorrowSlipDetail.query.filter_by(borrow_slip_id=slip_id, is_returned=False).all()
+    for detail in details:
+        detail.is_returned = True
+        detail.return_date = datetime.now()
+        book = Book.query.get(detail.book_id)
+        if book:
+            book.quantity += 1
 
-        details = BorrowSlipDetail.query.filter_by(
-            borrow_slip_id=slip_id,
-            is_returned=False
-        ).all()
+    slip.status = BorrowSlipStatus.RETURNED
 
-        for detail in details:
-            detail.is_returned = True
-            detail.return_date = datetime.now()
+    remaining_overdue = len(get_borrow_slip_status_overdue(slip.reader_id))
 
-            book = Book.query.get(detail.book_id)
-            if book:
-                book.quantity += 1
+    if remaining_overdue == 0:
+        reader = Reader.query.get(slip.reader_id)
+        if reader:
+            reader.status = ReaderStatus.ACTIVE
 
-        # cập nhật trạng thái phiếu
-        slip.status = BorrowSlipStatus.RETURNED
-
-        # kiểm tra còn phiếu quá hạn không
-        remaining_overdue = BorrowSlip.query.filter(
-            and_(
-                BorrowSlip.reader_id == slip.reader_id,
-                BorrowSlip.status == BorrowSlipStatus.OVERDUE
-            )
-        ).count()
-
-        # nếu hết quá hạn -> mở khóa reader
-        if remaining_overdue == 0:
-            reader = Reader.query.get(slip.reader_id)
-
-            if reader:
-                reader.status = ReaderStatus.ACTIVE
-
-        db.session.commit()
-
-        return True, "Đã duyệt trả sách thành công!"
-
-    except Exception as e:
-        db.session.rollback()
-        print(f"Lỗi confirm trả sách: {e}")
-        return False, "Có lỗi xảy ra!"
+    db.session.commit()
+    return True, "Đã duyệt trả sách thành công!"
 
 
 def check_and_update_overdue_slips():
     try:
-        now = datetime.now()
+        now = datetime.now().date()
 
         # Tìm tất cả phiếu BORROWING mà due_date < hôm nay
         overdue_slips = BorrowSlip.query.filter(
             and_(
-                BorrowSlip.status == BorrowSlipStatus.BORROWING,
+                BorrowSlip.status.in_([
+                    BorrowSlipStatus.BORROWING,
+                    BorrowSlipStatus.OVERDUE
+                ]),
                 BorrowSlip.due_date < now
             )
         ).all()
@@ -121,7 +103,7 @@ def check_and_update_overdue_slips():
         PENALTY_PER_DAY = 10000  # 10,000đ/ngày quá hạn
 
         for slip in overdue_slips:
-            overdue_days = (now - slip.due_date).days
+            overdue_days = (now - slip.due_date.date()).days
             penalty_fee = overdue_days * PENALTY_PER_DAY
 
             # Cập nhật status và phí phạt
