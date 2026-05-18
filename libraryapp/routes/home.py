@@ -30,8 +30,17 @@ def home():
     author = request.args.get("author")
     type = request.args.get("type")
     page = int(request.args.get("page", 1))
+
+
     err_msg = None
 
+    is_searching = 'keyword' in request.args
+
+    if is_searching:
+        if not keyword and not author and not type:
+            err_msg = "Vui lòng nhập ít nhất 1 điều kiện để tìm kiếm!"
+        elif (keyword and len(keyword) < 2) or (author and len(author) < 2):
+            err_msg = "Vui lòng nhập ít nhất 2 ký tự đối với tên sách hoặc tên tác giả!"
 
     if (keyword and len(keyword.strip()) < 2) or (author and len(author.strip()) < 2):
         err_msg = "Vui lòng nhập ít nhất 2 ký tự để tìm kiếm!"
