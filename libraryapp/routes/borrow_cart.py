@@ -54,18 +54,18 @@ def confirm():
 
     reader = Reader.query.get(current_user.id)
 
-    # 0. Cập nhật trạng thái OVERDUE tự động
     if reader:
         check_and_update_overdue_slips(reader.id)
 
-    # 1. Kiểm tra tài khoản có bị khóa không
+
+
     if not reader or reader.status.name == 'LOCKED':
         return jsonify({
             'success': False,
             'message': 'Tài khoản của bạn đang bị khóa! Vui lòng liên hệ thư viện để được hỗ trợ.'
         })
 
-    # 2. Kiểm tra reader có phiếu mượn với status OVERDUE không
+
     overdue_slip = db.session.query(BorrowSlip).filter(
         BorrowSlip.reader_id == reader.id,
         BorrowSlip.status == BorrowSlipStatus.OVERDUE
@@ -77,7 +77,7 @@ def confirm():
             'message': f'Bạn không thể mượn sách! Vui lòng trả sách quá hạn trước (Phiếu mượn #{overdue_slip.id}).'
         })
 
-    # 3. Kiểm tra số lượng sách mượn (tối đa 5 quyển)
+
     borrowing_count = count_reader_borrowing_books(reader.id)
     total_books = borrowing_count + len(cart)
 
@@ -87,7 +87,7 @@ def confirm():
             'message': f'Bạn chỉ được mượn tối đa 5 quyển sách! Hiện tại bạn đang mượn {borrowing_count} quyển, thêm {len(cart)} quyển sẽ vượt quá giới hạn.'
         })
 
-    # 4. Tạo phiếu mượn
+
     borrow_slip, details = create_borrow_slip_multiple(
         reader_id=reader.id,
         book_ids=cart,

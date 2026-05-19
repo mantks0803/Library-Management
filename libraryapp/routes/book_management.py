@@ -1,11 +1,12 @@
+import math
 from flask import Blueprint, render_template, request, redirect, flash
 from flask_login import current_user
+
 from libraryapp import app
-from libraryapp.models import UserRole
-from libraryapp.utils import permission
 from libraryapp.dao.books import get_list_books, count_books, add_book
+from libraryapp.models import UserRole
 from libraryapp.utils import is_image
-import math
+from libraryapp.utils import permission
 
 book_management_bp = Blueprint('book_management', __name__)
 
@@ -36,8 +37,9 @@ def add_book_process():
     publish_year = request.form.get("publish_year", "").strip()
     quantity = request.form.get("quantity", "1").strip()
     avatar = request.files.get("avatar")
+    ##
 
-    # Validation
+
     if not title:
         flash("Tên sách không được để trống!", "danger")
         return redirect("/book")
@@ -50,9 +52,10 @@ def add_book_process():
         flash("Thể loại không được để trống!", "danger")
         return redirect("/book")
 
-    if not is_image(avatar.filename):
-        return render_template("admin/book_management.html", err_msg="File không hợp lệ!")
-
+    if avatar and avatar.filename:
+        if not is_image(avatar.filename):
+            flash("File không hợp lệ!", "danger")
+            return redirect("/book")
     try:
         publish_year = int(publish_year) if publish_year else None
         quantity = int(quantity) if quantity and quantity.isdigit() else 1
@@ -61,7 +64,7 @@ def add_book_process():
             flash("Số lượng phải lớn hơn 0!", "danger")
             return redirect("/book")
 
-        # Thêm sách
+
         success, result = add_book(
             title=title,
             author=author,
@@ -72,14 +75,13 @@ def add_book_process():
         )
 
         if success:
-            flash(f"✅ Thêm sách '{title}' thành công!", "success")
+            flash(f" Thêm sách '{title}' thành công!", "success")
         else:
-            flash(f"❌ Lỗi: {result}", "danger")
+            flash(f" Lỗi: {result}", "danger")
 
     except ValueError:
         flash("Năm xuất bản và số lượng phải là số!", "danger")
     except Exception as e:
-        flash(f"❌ Lỗi hệ thống: {str(e)}", "danger")
+        flash(f" Lỗi hệ thống: {str(e)}", "danger")
 
     return redirect("/book")
-

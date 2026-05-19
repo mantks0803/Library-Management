@@ -2,7 +2,7 @@ from libraryapp.models import BorrowSlip, BorrowSlipDetail, BorrowSlipStatus, Bo
 from datetime import datetime
 from libraryapp import db
 
-# Tính phí phạt (ví dụ: 10.000đ/ngày quá hạn)
+
 PENALTY_PER_DAY = 10000
 
 def return_slip(slip_id, current_reader_id):
@@ -23,10 +23,10 @@ def return_slip(slip_id, current_reader_id):
 
         return_date = datetime.now()
 
-        # Kiểm tra trả quá hạn
+
         is_overdue = return_date > slip.due_date
 
-        # Tính phí phạt nếu quá hạn
+
         penalty_fee = 0
         if is_overdue:
             overdue_days = (return_date - slip.due_date).days
@@ -36,12 +36,12 @@ def return_slip(slip_id, current_reader_id):
             detail.is_returned = True
             detail.return_date = return_date
 
-            # Trả sách vào kho
+
             book = Book.query.get(detail.book_id)
             if book:
                 book.quantity += 1
 
-        # Cập nhật trạng thái phiếu mượn
+
         slip.status = BorrowSlipStatus.OVERDUE if is_overdue else BorrowSlipStatus.RETURNED
         slip.penalty_fee = penalty_fee
 

@@ -29,8 +29,3 @@ def count_readers(full=False):
     return Reader.query.filter(Reader.active.is_(True)).count() if full \
         else Reader.query.filter(and_(Reader.active.is_(True), Reader.id == current_user.id)).count()
 
-
-# def delete_soft_reader(id):
-#     reader = Reader.query.get(id)
-#     reader.active = False
-#     db.session.commit()
