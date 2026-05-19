@@ -66,13 +66,13 @@
                                     {% if loop.first %}
                                         <td class="text-center" rowspan="{{ slip.books|length }}">
                                             {% if slip.status == 'Đã trả' %}
-                                                <span class="badge bg-success rounded-pill px-3 py-2"><i class="fa-solid fa-check me-1"></i> Đã trả</span>
+                                                <span class="badge bg-success rounded-pill px-3 py-2" name="status"><i class="fa-solid fa-check me-1"></i> Đã trả</span>
                                             {% elif slip.status == 'Đang mượn' %}
-                                                <span class="badge bg-primary rounded-pill px-3 py-2"><i class="fa-solid fa-book-open-reader me-1"></i> Đang mượn</span>
+                                                <span class="badge bg-primary rounded-pill px-3 py-2" name="status"><i class="fa-solid fa-book-open-reader me-1"></i> Đang mượn</span>
                                             {% elif slip.status == 'Chờ duyệt' %}
-                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2"><i class="fa-solid fa-hourglass-half me-1"></i> Chờ duyệt</span>
+                                                <span class="badge bg-warning text-dark rounded-pill px-3 py-2" name="status"><i class="fa-solid fa-hourglass-half me-1"></i> Chờ duyệt</span>
                                             {% else %}
-                                                <span class="badge bg-danger rounded-pill px-3 py-2"><i class="fa-solid fa-triangle-exclamation me-1"></i> Quá hạn</span>
+                                                <span class="badge bg-danger rounded-pill px-3 py-2" name="status"><i class="fa-solid fa-triangle-exclamation me-1"></i> Quá hạn</span>
                                             {% endif %}
                                         </td>
                                     {% endif %}
@@ -90,7 +90,7 @@
                                     {% if loop.first %}
                                         <td class="text-center" rowspan="{{ slip.books|length }}">
                                             {% if slip.status == 'Đang mượn' or slip.status == 'Quá hạn' %}
-                                                <button class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3"
+                                                <button class="btn btn-sm btn-outline-success fw-bold rounded-pill px-3" name="btn-return"
                                                         onclick="openReturnModal({{ slip.slip_id }})">
                                                     <i class="fa-solid fa-rotate-left me-1"></i> Yêu cầu trả
                                                 </button>

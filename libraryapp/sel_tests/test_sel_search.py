@@ -1,5 +1,4 @@
 from selenium.webdriver.common.by import By
-
 from libraryapp.sel_tests.pages.HomePage import HomePage
 import time
 
@@ -13,6 +12,7 @@ def test_search_book_by_name(driver):
 
     results = driver.find_elements(By.CSS_SELECTOR, '.container-fluid .card-title')
     assert all(kw in r.text for r in results)
+
 
 def test_search_book_not_found(driver):
     kw = 'Truyện Kiều'
@@ -37,6 +37,7 @@ def test_search_book_by_author(driver):
     results = driver.find_elements(By.CSS_SELECTOR, '.author-name')
     assert all(author in r.text for r in results)
 
+
 def test_search_kw_less(driver):
     home = HomePage(driver=driver)
     home.open_page()
@@ -45,6 +46,7 @@ def test_search_kw_less(driver):
 
     alert = driver.find_element(By.CSS_SELECTOR, '.alert')
     assert 'Vui lòng nhập ít nhất 2 ký tự để tìm kiếm!' in alert.text
+
 
 def test_paging_book(driver):
     home = HomePage(driver=driver)
@@ -64,6 +66,7 @@ def test_search_type_book(driver):
     results = driver.find_elements(By.CSS_SELECTOR, '.book-type')
 
     assert all('Computer Science' in r.text for r in results)
+
 
 def test_search_all(driver):
     home = HomePage(driver=driver)
@@ -85,6 +88,7 @@ def test_search_all(driver):
     assert all(author in r.text for r in res_author)
     assert all(book_type in r.text for r in res_type)
 
+
 def test_search_not_found(driver):
     home = HomePage(driver=driver)
     home.open_page()
@@ -101,6 +105,110 @@ def test_search_not_found(driver):
     alert = driver.find_element(By.CSS_SELECTOR, '.container-fluid .alert')
 
     assert len(res) == 0
+    assert "Không có sách nào phù hợp!" in alert.text
+
+
+def test_search_by_name_and_author_success(driver):
+    home = HomePage(driver=driver)
+    home.open_page()
+    book_name = "Clean Code"
+    author = "Robert C. Martin"
+
+    home.search_book_name(book_name)
+    time.sleep(2)
+    home.search_author(author)
+    time.sleep(2)
+
+    res_name = driver.find_elements(By.CSS_SELECTOR, '.container-fluid .card-title')
+    res_author = driver.find_elements(By.CSS_SELECTOR, '.author-name')
+
+    assert all(book_name in r.text for r in res_name)
+    assert all(author in r.text for r in res_author)
+
+
+def test_search_by_name_and_author_fail(driver):
+    home = HomePage(driver=driver)
+    home.open_page()
+    book_name = "Clean Code"
+    author = "Erich Gamma"
+
+    home.search_book_name(book_name)
+    time.sleep(2)
+    home.search_author(author)
+    time.sleep(2)
+
+    alert = driver.find_element(By.CSS_SELECTOR, '.container-fluid .alert')
+
+    assert "Không có sách nào phù hợp!" in alert.text
+
+
+def test_search_by_name_and_type(driver):
+    home = HomePage(driver=driver)
+    home.open_page()
+    book_name = "Clean Code"
+    book_type = "Programming"
+
+    home.search_book_name(book_name)
+    time.sleep(2)
+    home.search_type(book_type)
+    time.sleep(1)
+
+    res_name = driver.find_elements(By.CSS_SELECTOR, '.container-fluid .card-title')
+    res_type = driver.find_elements(By.CSS_SELECTOR, '.book-type')
+
+    assert all(book_name in r.text for r in res_name)
+    assert all(book_type in r.text for r in res_type)
+
+
+def test_search_by_name_and_type_fail(driver):
+    home = HomePage(driver=driver)
+    home.open_page()
+    book_name = "OOP"
+    book_type = "Programming"
+
+    home.search_type(book_type)
+    time.sleep(2)
+    home.search_book_name(book_name)
+    time.sleep(1)
+
+    alert = driver.find_element(By.CSS_SELECTOR, '.container-fluid .alert')
+
+    assert "Không có sách nào phù hợp!" in alert.text
+
+
+def test_search_by_author_and_type(driver):
+    home = HomePage(driver=driver)
+    home.open_page()
+
+    author = "Erich Gamma"
+    book_type = "Programming"
+
+    home.search_type(book_type)
+    time.sleep(1)
+    home.search_author(author)
+    time.sleep(1)
+
+    res_author = driver.find_elements(By.CSS_SELECTOR, '.author-name')
+    res_type = driver.find_elements(By.CSS_SELECTOR, '.book-type')
+
+    assert all(author in r.text for r in res_author)
+    assert all(book_type in r.text for r in res_type)
+
+
+def test_search_by_author_and_type_fail(driver):
+    home = HomePage(driver=driver)
+    home.open_page()
+
+    author = "Erich Gamma"
+    book_type = "Novel"
+
+    home.search_type(book_type)
+    time.sleep(2)
+    home.search_author(author)
+    time.sleep(1)
+
+    alert = driver.find_element(By.CSS_SELECTOR, '.container-fluid .alert')
+
     assert "Không có sách nào phù hợp!" in alert.text
 
 
