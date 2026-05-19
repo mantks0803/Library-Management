@@ -15,6 +15,7 @@ class HomePage(BasePage):
     # Tìm button "Thêm vào giỏ" trên trang chi tiết
     ADD_BOOK_BUTTON1 = (By.CSS_SELECTOR, 'div.col-md-8.p-5 > div.d-flex.gap-3.mt-5 > button')
 
+
     def open_page(self):
         self.open(self.URL)
 
@@ -42,15 +43,16 @@ class HomePage(BasePage):
         self.select(*self.SELECT_FORM, book_type)
         self.click(*self.SEARCH_BTN)
 
-    def add_to_cart(self):
-        """
-        Thêm sách vào giỏ
-        1. Click vào nút "Xem chi tiết" sách đầu tiên
-        2. Chờ trang chi tiết load
-        3. Click vào nút "Thêm vào giỏ"
-        """
-        time.sleep(1)  # Chờ homepage load xong
-        self.click(*self.BOOK_BUTTON1)
-        time.sleep(2)  # Chờ trang chi tiết load
-        self.click(*self.ADD_BOOK_BUTTON1)
-        time.sleep(1)  # Chờ alert/action hoàn tất
+    def get_dynamic_view_btn(self, index):
+        xpath = f"(//div[contains(@class, 'card-body')]//button)[{index}]"
+        return (By.XPATH, xpath)
+
+
+    def view_book_detail(self, book_index):
+        target_btn_locator = self.get_dynamic_view_btn(book_index)
+        self.click(*target_btn_locator)
+
+
+
+
+
