@@ -11,6 +11,7 @@ class AdminPage(BasePage):
     OPEN_ADD_MODAL_BTN = (By.CSS_SELECTOR, "button[data-bs-target='#addBookModal']")
     TITLE_INPUT = (By.CSS_SELECTOR, "input[name='title']")
     AUTHOR_INPUT = (By.CSS_SELECTOR, "input[name='author']")
+    YEAR_INPUT = (By.CSS_SELECTOR, "input[name='publish_year']")
     TYPE_INPUT = (By.CSS_SELECTOR, "input[name='type']")
     QTY_INPUT = (By.CSS_SELECTOR, "input[name='quantity']")
     SAVE_BOOK_BTN = (By.CSS_SELECTOR, "form[action='/book/add'] button[type='submit']")
@@ -30,15 +31,24 @@ class AdminPage(BasePage):
         self.open('http://127.0.0.1:5000/logout')
         time.sleep(1)
 
-    def add_book(self, title, author, book_type, qty):
+    def add_book(self, title, author,pubyear, book_type, qty):
         self.open('http://127.0.0.1:5000/book')
         time.sleep(1)
         self.driver.execute_script("arguments[0].click();", self.find(*self.OPEN_ADD_MODAL_BTN))
         time.sleep(1)
         self.typing(*self.TITLE_INPUT, title)
+        time.sleep(1)
         self.typing(*self.AUTHOR_INPUT, author)
+        time.sleep(1)
+
         self.typing(*self.TYPE_INPUT, book_type)
-        self.typing(*self.QTY_INPUT, str(qty))
+        time.sleep(1)
+        self.typing(*self.YEAR_INPUT,pubyear)
+        time.sleep(1)
+        #fix : điền số bị chèn
+        qty_el = self.find(*self.QTY_INPUT)
+        qty_el.clear()
+        qty_el.send_keys(str(qty))  #
         self.driver.execute_script("arguments[0].click();", self.find(*self.SAVE_BOOK_BTN))
         time.sleep(2)
 
