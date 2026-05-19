@@ -7,19 +7,15 @@ def validate_password(password, confirm_password=None):
     if len(password) < 6:
         return False, "Mật khẩu phải có ít nhất 6 ký tự!"
 
-    # Check có số
     if not re.search(r"[0-9]", password):
         return False, "Mật khẩu phải chứa ít nhất một chữ số!"
 
-    # Check có ký tự thường
     if not re.search(r"[a-z]", password):
         return False, "Mật khẩu phải chứa ít nhất một chữ thường!"
 
-    # Check có ký tự hoa
     if not re.search(r"[A-Z]", password):
         return False, "Mật khẩu phải chứa ít nhất một chữ hoa!"
 
-    # Check xác nhận mật khẩu
     if confirm_password and password != confirm_password:
         return False, "Mật khẩu xác nhận không khớp!"
 
@@ -32,11 +28,9 @@ def auth_user(username, password):
     password = hash_password(password)
     return User.query.filter(User.username == username, User.password == password).first()
 
-#def add_user(name, phone, email, username, password, confirm):
-   
 
-def add_user(name, phone, email, username, password,confirm):
-   if not name or not name.strip():
+def add_user(name, phone, email, username, password, confirm):
+    if not name or not name.strip():
         raise ValueError("Họ tên không được để trống!")
 
     if not username or not username.strip():
@@ -46,21 +40,13 @@ def add_user(name, phone, email, username, password,confirm):
         raise ValueError("Số điện thoại không hợp lệ!")
 
     valid, msg = validate_password(password, confirm)
+
     if not valid:
         raise ValueError(msg)
 
     if User.query.filter(User.username == username.strip()).first():
         raise ValueError("Username đã tồn tại!")
-    if len(password) < 8:
-        raise ValueError('Mật khẩu phải từ 8 kí tự trở lên!')
-    if not re.search(r'[0-9]', password):
-        raise ValueError('Mật khẩu phải có số!')
-    if not re.search(r'[a-z]', password):
-        raise ValueError('Mật khẩu phải có ký tự thường!')
-    if not re.search(r'[A-Z]', password):
-        raise ValueError('Mật khẩu phải có ký tự hoa!')
-    if User.query.filter(User.username.__eq__(username)).first():
-        raise ValueError('Tên đăng nhập đã tồn tại!')
+
     password = hash_password(password)
 
     user = User(
