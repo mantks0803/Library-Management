@@ -20,7 +20,8 @@
         {% if remaining_overdue and remaining_overdue > 0 %}
         <div class="alert alert-warning text-center fw-bold shadow-sm" role="alert">
             <i class="fa-solid fa-triangle-exclamation me-2"></i>
-            Bạn đang có {{ remaining_overdue }} phiếu mượn quá hạn. Vui lòng trả sách và đóng phạt tại thư viện để mở khóa tài khoản!
+            Bạn đang có {{ remaining_overdue }} phiếu mượn quá hạn. Vui lòng trả sách và đóng phạt tại thư viện để mở
+            khóa tài khoản!
         </div>
         {% endif %}
         <form action="/" method="GET">
@@ -55,7 +56,8 @@
                         <select class="form-select form-select-lg" name="type">
                             <option value="">-- Tất cả thể loại --</option>
                             {% for type in types %}
-                            <option value="{{ type }}" {% if type== selected_type %}selected{% endif %}>{{ type }}
+                            <option value="{{ type }}" {% if type == selected_type %}selected{% endif %}>
+                                {{ type }}
                             </option>
                             {% endfor %}
                         </select>

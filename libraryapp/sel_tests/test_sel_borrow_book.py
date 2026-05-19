@@ -6,6 +6,7 @@ from libraryapp.sel_tests.pages.HomePage import HomePage
 from libraryapp.sel_tests.pages.LoginPage import LoginPage
 import time
 
+
 def test_add_book_to_cart_success(driver):
     login_page = LoginPage(driver)
     login_page.open_page()
@@ -55,12 +56,93 @@ def test_add_book_to_cart_fail(driver):
     assert '5' in cart.text
 
 
-# def test_delete_book(driver):
-#     login_page = LoginPage(driver)
-#     login_page.open_page()
-#     login_page.login("ndqbao", "Abc1234@")
-#     home_page = HomePage(driver)
+def test_add_book_existed_in_cart(driver):
+    login_page = LoginPage(driver)
+    login_page.open_page()
+    login_page.login("ndqbao", "Abc1234@")
+    time.sleep(1)
 
+    home_page = HomePage(driver)
+    book_detail_page = BookDetailPage(driver)
+
+    home_page.view_book_detail(1)
+    book_detail_page.add_book_to_cart()
+    book_detail_page.return_home()
+    time.sleep(1)
+
+    home_page.view_book_detail(1)
+    book_detail_page.add_book_to_cart()
+    time.sleep(1)
+
+    warning = driver.find_element(By.CSS_SELECTOR, '.alert-warning')
+    cart = driver.find_element(By.CSS_SELECTOR, '#cart-badge')
+    assert 'Sách đã có trong giỏ mượn!' in warning.text
+    assert '1' in cart.text
+
+
+def test_add_book_quantity_zero(driver):
+    login_page = LoginPage(driver)
+    login_page.open_page()
+    login_page.login('ndqbao', 'Abc1234@')
+    home_page = HomePage(driver)
+
+    time.sleep(1)
+    driver.execute_script("window.scrollBy(0, 900);")
+    time.sleep(1)
+    home_page.view_book_detail(8)
+    time.sleep(1)
+    res = driver.find_element(By.CSS_SELECTOR, 'div.fs-5.fw-bold.text-danger')
+
+    assert 'Đã hết sách' in res.text
+
+
+def test_delete_book(driver):
+    login_page = LoginPage(driver)
+    login_page.open_page()
+    login_page.login("ndqbao", "Abc1234@")
+    cart_page = CartPage(driver)
+    home_page = HomePage(driver)
+
+    home_page.view_book_detail(1)
+    time.sleep(1)
+    book_detail_page = BookDetailPage(driver)
+    book_detail_page.add_book_to_cart()
+    cart_page.open_page()
+    cart_page.delete_book()
+    time.sleep(1)
+    cart = driver.find_element(By.CSS_SELECTOR, '#cart-badge')
+    assert cart.text == ''
+
+
+def test_delete_all_cart(driver):
+    login_page = LoginPage(driver)
+    login_page.open_page()
+    login_page.login('ndqbao', 'Abc1234@')
+
+    time.sleep(1)
+
+    home_page = HomePage(driver)
+    book_detail_page = BookDetailPage(driver)
+
+    for i in range(5):
+        if i > 2:
+            driver.execute_script("window.scrollBy(0, 700);")
+            time.sleep(1)
+        home_page.view_book_detail(i + 1)
+        book_detail_page.add_book_to_cart()
+        book_detail_page.return_home()
+        time.sleep(1)
+
+    cart_page = CartPage(driver)
+    cart_page.open_page()
+    time.sleep(1)
+    cart_page.clear_cart()
+
+    time.sleep(2)
+
+    add_book_btn = driver.find_element(By.CSS_SELECTOR, 'div.card-body > div > p')
+
+    assert add_book_btn is not None
 
 
 def test_borrow_book_success(driver):
@@ -95,7 +177,7 @@ def test_borrow_book_success(driver):
 def test_borrow_6th_book(driver):
     login_page = LoginPage(driver=driver)
     login_page.open_page()
-    login_page.login("ndqbao", "Abc1234@")
+    login_page.login("ndqbao1", "Abc1234@")
 
     home_page = HomePage(driver=driver)
     book_detail_page = BookDetailPage(driver=driver)

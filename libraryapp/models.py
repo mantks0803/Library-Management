@@ -103,7 +103,7 @@ def insert_books():
         {"title": "Introduction to Algorithms", "author": "Thomas H. Cormen", "type": "Computer Science", "publish_year": 2009, "quantity": 2, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939286/61O5SsbL8HL_rsv5rl.jpg"},
         {"title": "Python Crash Course", "author": "Eric Matthes", "type": "Programming", "publish_year": 2019, "quantity": 27, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776939324/OIP_leycyx.jpg"},
         {"title": "Fluent Python", "author": "Luciano Ramalho", "type": "Programming", "publish_year": 2015, "quantity": 3, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
-        {"title": "Harry Potter", "author": "J.K. Rowling", "type": "Novel", "publish_year": 1997, "quantity": 5, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
+        {"title": "Harry Potter", "author": "J.K. Rowling", "type": "Novel", "publish_year": 1997, "quantity": 0, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
         {"title": "Sherlock Holmes", "author": "Arthur Conan Doyle", "type": "Detective", "publish_year": 1892, "quantity": 4, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
         {"title": "Atomic Habits", "author": "James Clear", "type": "Self Help", "publish_year": 2018, "quantity": 6, "avatar": "https://res.cloudinary.com/dprwsgoeg/image/upload/v1776937541/book_bjzg3u.svg"},
 
@@ -615,6 +615,7 @@ def init_all_data():
         create_user_base("Nguyễn Thanh Mẫn", "0334903355","dephucau@gmail.com", "man", "123", UserRole.READER)
         create_user_base("Mẫn", "0364341310", "dephucau@gmail.com", "tester", "Th@nhman08032005", UserRole.READER)
         create_user_base("Nguyễn Dương Quốc Bảo","0848482273","ndqba@gmail.com", "ndqbao", "Abc1234@", UserRole.READER)
+        create_user_base("Dương Quốc Bảo", "0848482273", "ndqba@gmail.com", "ndqbao1", "Abc1234@", UserRole.READER)
         db.session.commit()
 
 
