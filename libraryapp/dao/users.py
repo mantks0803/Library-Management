@@ -26,11 +26,9 @@ def validate_password(password, confirm_password=None):
 def get_current_user(user_id):
     return User.query.get(user_id)
 
-
 def auth_user(username, password):
     password = hash_password(password)
     return User.query.filter(User.username == username, User.password == password).first()
-
 
 def add_user(name, phone, email, username, password, confirm):
     if not name or not name.strip():

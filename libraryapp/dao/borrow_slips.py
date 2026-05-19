@@ -85,12 +85,11 @@ def confirm_return_borrow_slip(slip_id):
     return True, "Đã duyệt trả sách thành công!"
 
 
-def check_and_update_overdue_slips():
+def check_and_update_overdue_slips(reader_id=None):
     try:
         now = datetime.now().date()
 
-
-        overdue_slips = BorrowSlip.query.filter(
+        query = BorrowSlip.query.filter(
             and_(
                 BorrowSlip.status.in_([
                     BorrowSlipStatus.BORROWING,
@@ -98,7 +97,12 @@ def check_and_update_overdue_slips():
                 ]),
                 BorrowSlip.due_date < now
             )
-        ).all()
+        )
+
+        if reader_id is not None:
+            query = query.filter(BorrowSlip.reader_id == reader_id)
+
+        overdue_slips = query.all()
 
         PENALTY_PER_DAY = 10000
 

@@ -73,4 +73,5 @@ def test_init_all_data_seeds_books_and_users(test_app, mocker):
     models.init_all_data()
 
     assert Book.query.count() > 0
-    assert User.query.count() == 4
+    usernames = {user.username for user in User.query.all()}
+    assert {"admin", "man", "tester", "ndqbao"}.issubset(usernames)

@@ -32,7 +32,7 @@ def view_cart():
     borrow_date_str = borrow_date.strftime('%d/%m/%Y')
     due_date_str = due_date.strftime('%d/%m/%Y')
 
-
+    # Đếm số sách đang mượn
     borrowing_count = count_reader_borrowing_books(current_user.id)
     total_books = borrowing_count + len(cart)
 
@@ -54,8 +54,9 @@ def confirm():
 
     reader = Reader.query.get(current_user.id)
 
+    if reader:
+        check_and_update_overdue_slips(reader.id)
 
-    check_and_update_overdue_slips()
 
 
     if not reader or reader.status.name == 'LOCKED':
