@@ -9,6 +9,11 @@ class HomePage(BasePage):
     SEARCH_BTN = (By.CSS_SELECTOR, '.container-fluid button.btn.btn-primary')
     FILTER_BTN = (By.CSS_SELECTOR, '[data-bs-toggle="collapse"]')
     SELECT_FORM = (By.CSS_SELECTOR, '.form-select')
+    # Sử dụng XPath để tìm button "Xem chi tiết" đầu tiên (ít nhạy cảm hơn)
+    BOOK_BUTTON1 = (By.XPATH, "//button[contains(text(), 'Xem chi tiết')]")
+    BOOK_BUTTON2 = (By.XPATH, "(//button[contains(text(), 'Xem chi tiết')])[2]")
+    # Tìm button "Thêm vào giỏ" trên trang chi tiết
+    ADD_BOOK_BUTTON1 = (By.CSS_SELECTOR, 'div.col-md-8.p-5 > div.d-flex.gap-3.mt-5 > button')
 
 
     def open_page(self):

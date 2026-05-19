@@ -103,5 +103,3 @@ def clear_cart_api():
 def get_cart_count():
     cart = get_cart()
     return jsonify({'count': len(cart)})
-
-

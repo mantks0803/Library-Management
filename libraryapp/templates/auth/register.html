@@ -23,11 +23,11 @@
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold text-secondary">Họ và Tên</label>
-                        <input type="text" name="name" value="{{ form.get('name', '') }}" class="form-control bg-light" placeholder="......" required>
+                        <input type="text" name="name" value="{{ request.form.get('name', '') }}" class="form-control bg-light" placeholder="......" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold text-secondary">Số điện thoại</label>
-                        <input type="text" name="phone" value="{{ form.get('phone', '') }}" class="form-control bg-light" placeholder="......." required>
+                        <input type="text" name="phone" value="{{ request.form.get('phone', '') }}" class="form-control bg-light" placeholder="......." required>
                     </div>
                 </div>
 
@@ -36,14 +36,14 @@
                         <label class="form-label fw-bold text-secondary">Tên đăng nhập</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light text-primary border-end-0"><i class="fa-solid fa-id-card"></i></span>
-                            <input type="text" name="username" value="{{ form.get('username', '') }}" class="form-control bg-light border-start-0" placeholder="Username..." required>
+                            <input type="text" name="username" value="{{ request.form.get('username', '') }}" class="form-control bg-light border-start-0" placeholder="Username..." required>
                         </div>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label fw-bold text-secondary">Email</label>
                         <div class="input-group">
                             <span class="input-group-text bg-light text-primary border-end-0"><i class="fa-solid fa-envelope"></i></span>
-                            <input type="email" name="email" value="{{ form.get('email', '') }}" class="form-control bg-light border-start-0" placeholder="@gmail.com" required>
+                            <input type="email" name="email" value="{{ request.form.get('email', '') }}" class="form-control bg-light border-start-0" placeholder="@gmail.com" required>
                         </div>
                     </div>
                 </div>
