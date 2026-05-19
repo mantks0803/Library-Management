@@ -1,13 +1,16 @@
+from wsgiref.simple_server import server_version
+
 import pytest
 from selenium import webdriver
+from selenium.webdriver.edge.service import Service
 
 @pytest.fixture(scope="function")
 def driver():
     print("\nStarting Selenium tests")
 
-    options = webdriver.ChromeOptions()
+    options = webdriver.EdgeOptions()
 
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Edge(options=options)
 
     driver.maximize_window()
 

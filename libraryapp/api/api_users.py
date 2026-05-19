@@ -25,11 +25,12 @@ def change_password_api():
         new_password = request.form.get("new_password")
         confirm_password = request.form.get("confirm_password")
 
-        if new_password != confirm_password:
-            return jsonify({"ok": False, "error": "Mật khẩu xác nhận không khớp!"})
         if current_user.password != hash_password(old_password):
             return jsonify({"ok": False, "error": "Mật khẩu hiện tại không chính xác!"})
+        if new_password != confirm_password:
+            return jsonify({"ok": False, "error": "Mật khẩu xác nhận không khớp!"})
         users.change_password(current_user, new_password)
+
         return jsonify({"ok": True, "message": "Đổi mật khẩu thành công!"})
 
     except Exception as ex:

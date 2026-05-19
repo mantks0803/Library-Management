@@ -18,15 +18,58 @@ document.addEventListener('DOMContentLoaded', updateCartBadge);
     const changePwdForm = document.getElementById('changePasswordForm');
 
     if (changePwdForm) {
+        const oldPwdInput = document.getElementById('oldPassword');
+        const newPwdInput = document.getElementById('newPassword');
+        const confirmPwdInput = document.getElementById('confirmPassword');
+        const newPwdError = document.getElementById('newPasswordError');
+        const confirmPwdError = document.getElementById('confirmPasswordError');
+
+        function validatePasswordRealtime() {
+            const newPwd = newPwdInput.value;
+            const confirmPwd = confirmPwdInput.value;
+
+            newPwdError.textContent = '';
+            confirmPwdError.textContent = '';
+
+            if (newPwd.length > 0 && newPwd.length < 6) {
+                newPwdError.textContent = 'Mật khẩu phải có ít nhất 6 ký tự!';
+                return false;
+            }
+
+            if (newPwd && !/[0-9]/.test(newPwd)) {
+                newPwdError.textContent = 'Mật khẩu phải chứa ít nhất một chữ số!';
+                return false;
+            }
+
+            if (newPwd && !/[a-z]/.test(newPwd)) {
+                newPwdError.textContent = 'Mật khẩu phải chứa ít nhất một chữ thường!';
+                return false;
+            }
+
+            if (newPwd && !/[A-Z]/.test(newPwd)) {
+                newPwdError.textContent = 'Mật khẩu phải chứa ít nhất một chữ hoa!';
+                return false;
+            }
+
+            if (confirmPwd && newPwd !== confirmPwd) {
+                confirmPwdError.textContent = 'Mật khẩu xác nhận không khớp!';
+                return false;
+            }
+
+            return true;
+        }
+
+        newPwdInput.addEventListener('input', validatePasswordRealtime);
+        confirmPwdInput.addEventListener('input', validatePasswordRealtime);
+
         changePwdForm.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const oldPwd = document.getElementById('oldPassword').value;
-            const newPwd = document.getElementById('newPassword').value;
-            const confirmPwd = document.getElementById('confirmPassword').value;
+            const oldPwd = oldPwdInput.value;
+            const newPwd = newPwdInput.value;
+            const confirmPwd = confirmPwdInput.value;
 
-            if (newPwd !== confirmPwd) {
-                alert("Mật khẩu mới không khớp! Vui lòng nhập lại.");
+            if (!validatePasswordRealtime()) {
                 return;
             }
 
