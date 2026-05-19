@@ -12,7 +12,7 @@ def update_infor_users(id):
         name = request.form.get("name")
         phone = request.form.get("phone")
         users.update_user(id, name, phone)
-        return jsonify({"ok": True, "message": "Update user successfully"})
+        return jsonify({"ok": True, "message": "Cập nhật thông tin thành công"})
     except Exception as ex:
         return jsonify({"ok": False, "error": str(ex)})
 
