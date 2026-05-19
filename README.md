@@ -31,6 +31,7 @@ Hệ thống cho phép người dùng thực hiện các chức năng:
 * Áp dụng kiến thức kiểm thử phần mềm
 * Xây dựng hệ thống quản lý thư viện cơ bản
 * Thực hiện kiểm thử chức năng và kiểm thử đơn vị
+* Thực hiện kiểm thử với SELENIUM
 
 ---
 
