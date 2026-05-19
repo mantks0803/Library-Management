@@ -1,0 +1,256 @@
+from io import BytesIO
+
+import pytest
+
+from BlogOutApp.dao.user_dao import get_user_by_username
+from BlogOutApp.models import User
+from BlogOutApp.test.test_base import login_as, mock_cloudinary, sample_users, test_app, test_client, test_session
+from BlogOutApp.utils import verify_password
+
+
+def _avatar(filename='avatar.png'):
+    return BytesIO(b'fake image content'), filename
+
+
+def _register_payload(**overrides):
+    payload = {
+        'fullname': 'Quyen User',
+        'email': 'quyen@gmail.com',
+        'username': 'quyenuser',
+        'password': 'Secret123',
+        'avatar': _avatar(),
+    }
+    payload.update(overrides)
+    return payload
+
+
+def _assert_danger_flash(response):
+    assert b'flash-danger' in response.data
+
+
+def _assert_user_logged_out(client):
+    with client.session_transaction() as session:
+        assert '_user_id' not in session
+
+
+def test_login_get_success(test_client):
+    response = test_client.get('/login')
+
+    assert response.status_code == 200
+    assert b'name="username"' in response.data
+    assert b'name="password"' in response.data
+
+
+def test_login_post_user_success_redirects_home_and_sets_session(test_client, sample_users):
+    user = sample_users['author']
+    payload = {'username': user.username, 'password': 'Author123'}
+
+    response = test_client.post('/login', data=payload)
+
+    assert response.status_code == 302
+    assert response.headers['Location'].endswith('/')
+    with test_client.session_transaction() as session:
+        assert session['_user_id'] == str(user.id)
+        assert session['usertype'] == user.role.value
+
+
+def test_login_post_admin_success_redirects_admin_and_sets_session(test_client, sample_users):
+    user = sample_users['admin']
+    payload = {'username': user.username, 'password': 'Admin123'}
+
+    response = test_client.post('/login', data=payload)
+
+    assert response.status_code == 302
+    assert response.headers['Location'].endswith('/admin')
+    with test_client.session_transaction() as session:
+        assert session['_user_id'] == str(user.id)
+        assert session['usertype'] == user.role.value
+
+
+@pytest.mark.parametrize(
+    'payload',
+    [
+        {'username': 'authoruser', 'password': 'Wrong123'},
+        {'username': 'missinguser', 'password': 'Secret123'},
+        {'username': ' ', 'password': 'Secret123'},
+        {'username': 'authoruser', 'password': ' '},
+        {'username': 'authoruser', 'password': ' Author123 '},
+    ],
+)
+def test_login_post_invalid_credentials_returns_error_and_keeps_user_logged_out(test_client,sample_users,payload,):
+    response = test_client.post('/login', data=payload)
+
+    assert response.status_code == 200
+    _assert_danger_flash(response)
+    _assert_user_logged_out(test_client)
+
+
+def test_login_get_authenticated_user_redirects_home(test_client, sample_users):
+    login_as(test_client, sample_users['author'])
+
+    response = test_client.get('/login')
+
+    assert response.status_code == 302
+    assert response.headers['Location'].endswith('/')
+
+
+def test_register_get_success(test_client):
+    response = test_client.get('/register')
+
+    assert response.status_code == 200
+    assert b'name="fullname"' in response.data
+    assert b'name="email"' in response.data
+    assert b'name="username"' in response.data
+    assert b'name="password"' in response.data
+    assert b'name="avatar"' in response.data
+
+
+def test_register_post_success_creates_user_and_redirects_login(
+    test_client,
+    test_session,
+    mock_cloudinary,
+):
+    payload = _register_payload()
+
+    response = test_client.post(
+        '/register',
+        data=payload,
+        content_type='multipart/form-data',
+    )
+
+    assert response.status_code == 302
+    assert response.headers['Location'].endswith('/login')
+
+    user = get_user_by_username('quyenuser')
+    assert user is not None
+    assert user.name == 'Quyen User'
+    assert user.email == 'quyen@gmail.com'
+    assert user.avatar == 'http://fake-image.png'
+    assert user.password != 'Secret123'
+    assert verify_password('Secret123', user.password)
+
+
+def test_register_post_duplicate_username_returns_error_and_does_not_create_user(test_client, test_session, sample_users, mocker):
+    upload_mock = mocker.patch(
+        'cloudinary.uploader.upload',
+        return_value={'secure_url': 'http://fake-image.png'},
+    )
+    payload = _register_payload(
+        username=sample_users['author'].username,
+        email='quyen@gmail.com',
+    )
+    before_count = User.query.count()
+
+    response = test_client.post(
+        '/register',
+        data=payload,
+        content_type='multipart/form-data',
+    )
+
+    assert response.status_code == 200
+    _assert_danger_flash(response)
+    assert User.query.count() == before_count
+    assert get_user_by_username('quyenuser') is None
+    upload_mock.assert_not_called()
+
+
+def test_register_post_duplicate_email_returns_error_and_does_not_create_user(test_client, test_session, sample_users, mocker):
+    upload_mock = mocker.patch(
+        'cloudinary.uploader.upload',
+        return_value={'secure_url': 'http://fake-image.png'},
+    )
+    payload = _register_payload(
+        username='quyennew',
+        email=sample_users['author'].email,
+    )
+    before_count = User.query.count()
+
+    response = test_client.post(
+        '/register',
+        data=payload,
+        content_type='multipart/form-data',
+    )
+
+    assert response.status_code == 200
+    _assert_danger_flash(response)
+    assert User.query.count() == before_count
+    assert get_user_by_username('quyennew') is None
+    upload_mock.assert_not_called()
+
+
+@pytest.mark.parametrize(
+    'payload',
+    [
+        pytest.param(_register_payload(fullname=' '), id='blank-fullname'),
+        pytest.param(_register_payload(email=' '), id='blank-email'),
+        pytest.param(_register_payload(email='quyen'), id='invalid-email-format'),
+        pytest.param(_register_payload(username='abcd'), id='short-username'),
+        pytest.param(_register_payload(password='ngan'), id='short-password'),
+        pytest.param(_register_payload(password='Password'), id='password-without-number'),
+        pytest.param(_register_payload(password='12345678'), id='password-without-letter'),
+        pytest.param(_register_payload(avatar=(BytesIO(b''), '')), id='missing-avatar'),
+        pytest.param(_register_payload(avatar=(BytesIO(b'quyen text file'), 'quyen-avatar.txt')), id='non-image-avatar'),
+    ],
+)
+def test_register_post_invalid_payload_returns_error_and_does_not_create_user(test_client, test_session, mocker, payload):
+    upload_mock = mocker.patch(
+        'cloudinary.uploader.upload',
+        return_value={'secure_url': 'http://fake-image.png'},
+    )
+    before_count = User.query.count()
+
+    response = test_client.post(
+        '/register',
+        data=payload,
+        content_type='multipart/form-data',
+    )
+
+    assert response.status_code == 200
+    _assert_danger_flash(response)
+    assert User.query.count() == before_count
+    assert get_user_by_username('quyenuser') is None
+    upload_mock.assert_not_called()
+
+
+def test_register_post_cloudinary_failure_returns_error_and_does_not_create_user(test_client, test_session,monkeypatch):
+    def fake_upload(file):
+        raise RuntimeError('upload failed')
+
+    monkeypatch.setattr('cloudinary.uploader.upload', fake_upload)
+    before_count = User.query.count()
+
+    response = test_client.post(
+        '/register',
+        data=_register_payload(),
+        content_type='multipart/form-data',
+    )
+
+    assert response.status_code == 200
+    _assert_danger_flash(response)
+    assert User.query.count() == before_count
+    assert get_user_by_username('quyenuser') is None
+
+
+def test_register_get_authenticated_user_redirects_home(test_client, sample_users):
+    login_as(test_client, sample_users['author'])
+
+    response = test_client.get('/register')
+
+    assert response.status_code == 302
+    assert response.headers['Location'].endswith('/')
+
+
+def test_logout_get_success_clears_session_and_redirects_login(test_client, sample_users):
+    login_as(test_client, sample_users['author'])
+
+    response = test_client.get('/logout')
+
+    assert response.status_code == 302
+    assert response.headers['Location'].endswith('/login')
+    _assert_user_logged_out(test_client)
+
+
+def test_my_posts_get_unauthenticated_returns_unauthorized(test_client):
+    response = test_client.get('/my-posts')
+
+    assert response.status_code == 401

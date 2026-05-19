@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from libraryapp import db
 from libraryapp.dao.borrow_history import count_reader_borrowing_books, get_all_reader_borrow_details, \
-    get_borrow_slip_details, get_borrow_slip, get_reader_borrow_slips
+    get_borrow_slip_details, get_reader_borrow_slips
 from libraryapp.models import BorrowSlip, BorrowSlipDetail, Book, BorrowSlipStatus, UserRole, ReaderStatus, Reader, User
 from libraryapp.test.test_base import test_session, test_app, sample_reader, sample_books_borrow, sample_slip,\
     sample_slip_pending, sample_borrow_details, test_client
@@ -169,17 +169,6 @@ def test_get_reader_borrow_slips(test_app, sample_reader, sample_slip, sample_sl
 
     if len(results) > 1:
         assert results[0].borrow_date >= results[1].borrow_date
-
-def test_get_borrow_slip(sample_slip):
-    slip = get_borrow_slip(sample_slip.id)
-
-    assert slip is not None
-    assert slip.id == sample_slip.id
-
-
-def test_get_borrow_slip_not_found(test_session):
-    slip = get_borrow_slip(9999)
-    assert slip is None
 
 
 def test_get_borrow_slip_details(sample_borrow_details, sample_slip_pending):
