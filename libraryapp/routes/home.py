@@ -60,7 +60,8 @@ def home():
 
     types = books.get_all_book_types()
 
-    return render_template("index.html", books=data_books, pages=pages, types=types, err_msg=err_msg, remaining_overdue=remaining_overdue)
+    return render_template("index.html", books=data_books, pages=pages, types=types, err_msg=err_msg, remaining_overdue=remaining_overdue,
+                           keyword=keyword, author=author, selected_type=type)
 
 
 @login.user_loader
