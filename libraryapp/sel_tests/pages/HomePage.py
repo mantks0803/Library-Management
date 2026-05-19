@@ -10,6 +10,7 @@ class HomePage(BasePage):
     FILTER_BTN = (By.CSS_SELECTOR, '[data-bs-toggle="collapse"]')
     SELECT_FORM = (By.CSS_SELECTOR, '.form-select')
 
+
     def open_page(self):
         self.open(self.URL)
 
@@ -36,6 +37,16 @@ class HomePage(BasePage):
         self.typing(*self.SEARCH_AUTHOR_INPUT, author)
         self.select(*self.SELECT_FORM, book_type)
         self.click(*self.SEARCH_BTN)
+
+    def get_dynamic_view_btn(self, index):
+        xpath = f"(//div[contains(@class, 'card-body')]//button)[{index}]"
+        return (By.XPATH, xpath)
+
+
+    def view_book_detail(self, book_index):
+        target_btn_locator = self.get_dynamic_view_btn(book_index)
+        self.click(*target_btn_locator)
+
 
 
 

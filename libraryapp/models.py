@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String, DATE, DateTime, Double, Boolean,
 from sqlalchemy.orm import relationship
 import enum
 from flask_login import UserMixin
-from datetime import datetime, date, timedelta, time
+from datetime import datetime, date, timedelta
 import random
 from libraryapp.utils import hash_password
 

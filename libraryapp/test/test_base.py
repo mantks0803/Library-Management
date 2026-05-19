@@ -4,14 +4,12 @@ from datetime import datetime, timedelta
 import pytest
 from flask import Flask
 from libraryapp import db
-from libraryapp.dao import books
 from libraryapp.models import Book, User, Reader, BorrowSlip, BorrowSlipStatus, BorrowSlipDetail, UserRole, ReaderStatus
-from libraryapp.routes import borrow_cart, book_detail
 from libraryapp.routes.book_detail import book_bp
 from libraryapp.routes.borrow_cart import borrow_bp
 from libraryapp.routes.borrow_history import history_bp
 from libraryapp.routes.home import home_bp
-from libraryapp.utils import hash_password
+
 
 def create_app():
     app = Flask(__name__)
