@@ -82,3 +82,21 @@ def test_logout_session_destroyed(driver):
     assert driver.current_url == "http://127.0.0.1:5000/login", \
         f"Session bị hủy, access /profile phải redirect về /login, nhưng URL={driver.current_url}"
 
+
+def test_logout_header_shows_login_button(driver):
+    """
+    TC-7.1: Header chuyển về trạng thái chưa đăng nhập sau khi logout.
+    - Đăng nhập reader.
+    - Đăng xuất.
+    - Assert: Header hiển thị lại nút Đăng nhập.
+    """
+    do_login(driver, 'user2', '123')
+    assert driver.current_url == "http://127.0.0.1:5000/"
+
+    logout_btn = find_logout_button(driver)
+    logout_btn.click()
+    time.sleep(1)
+
+    login_btn = driver.find_element(By.CSS_SELECTOR, "a[href='/login']")
+    assert "Đăng nhập" in login_btn.text
+
