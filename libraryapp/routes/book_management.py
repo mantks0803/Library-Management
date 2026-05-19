@@ -37,7 +37,7 @@ def add_book_process():
     quantity = request.form.get("quantity", "1").strip()
     avatar = request.files.get("avatar")
 
-    # Validation
+
     if not title:
         flash("Tên sách không được để trống!", "danger")
         return redirect("/book")
@@ -61,7 +61,7 @@ def add_book_process():
             flash("Số lượng phải lớn hơn 0!", "danger")
             return redirect("/book")
 
-        # Thêm sách
+
         success, result = add_book(
             title=title,
             author=author,
@@ -72,14 +72,14 @@ def add_book_process():
         )
 
         if success:
-            flash(f"✅ Thêm sách '{title}' thành công!", "success")
+            flash(f"Thêm sách '{title}' thành công!", "success")
         else:
-            flash(f"❌ Lỗi: {result}", "danger")
+            flash(f"Lỗi: {result}", "danger")
 
     except ValueError:
         flash("Năm xuất bản và số lượng phải là số!", "danger")
     except Exception as e:
-        flash(f"❌ Lỗi hệ thống: {str(e)}", "danger")
+        flash(f"Lỗi hệ thống: {str(e)}", "danger")
 
     return redirect("/book")
 

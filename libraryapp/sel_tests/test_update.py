@@ -40,9 +40,6 @@ def open_change_password_after_login(driver):
 
 
 def test_update_profile_success(driver):
-    """
-    TC-8: Đổi tên thành công.
-    """
     open_profile_after_login(driver)
 
     click_css(driver, "button[data-bs-target='#updateProfileModal']")
@@ -59,9 +56,7 @@ def test_update_profile_success(driver):
 
 
 def test_update_phone_invalid(driver):
-    """
-    TC-9: Đổi SĐT thất bại vì sai định dạng.
-    """
+
     open_profile_after_login(driver)
 
     click_css(driver, "button[data-bs-target='#updateProfileModal']")
@@ -77,10 +72,6 @@ def test_update_phone_invalid(driver):
 
 
 def test_change_password_success(driver):
-    """
-    TC-10: Đổi mật khẩu thành công.
-    """
-
     open_change_password_after_login(driver)
 
     click_css(driver, "#oldPassword").send_keys("123")
@@ -94,9 +85,6 @@ def test_change_password_success(driver):
 
 
 def test_change_password_mismatch(driver):
-    """
-    TC-12: Đổi mật khẩu thất bại vì xác nhận không khớp.
-    """
     open_change_password_after_login(driver)
 
     click_css(driver, "#oldPassword").send_keys("123")
@@ -109,9 +97,6 @@ def test_change_password_mismatch(driver):
 
 
 def test_change_password_wrong_old(driver):
-    """
-    TC-11: Đổi mật khẩu thất bại vì mật khẩu cũ sai.
-    """
     open_change_password_after_login(driver)
 
     click_css(driver, "#oldPassword").send_keys("WrongPassword")
@@ -125,13 +110,7 @@ def test_change_password_wrong_old(driver):
 
 
 def test_update_phone_success(driver):
-    """
-    TC-13: Đổi số điện thoại thành công.
-    - Login và mở trang hồ sơ.
-    - Mở modal cập nhật thông tin.
-    - Nhập số điện thoại hợp lệ.
-    - Assert: Alert thành công và số điện thoại mới hiển thị trên hồ sơ.
-    """
+
     open_profile_after_login(driver)
 
     click_css(driver, "button[data-bs-target='#updateProfileModal']")
@@ -150,12 +129,7 @@ def test_update_phone_success(driver):
 
 
 def test_change_password_too_short_realtime(driver):
-    """
-    TC-14: Mật khẩu mới quá ngắn hiển thị lỗi realtime.
-    - Login và mở modal đổi mật khẩu.
-    - Nhập mật khẩu mới ít hơn 6 ký tự.
-    - Assert: Lỗi hiện ngay dưới ô mật khẩu mới, không cần submit form.
-    """
+
     open_change_password_after_login(driver)
 
     click_css(driver, "#newPassword").send_keys("A1b")
@@ -165,12 +139,7 @@ def test_change_password_too_short_realtime(driver):
 
 
 def test_change_password_missing_number_realtime(driver):
-    """
-    TC-15: Mật khẩu mới thiếu chữ số hiển thị lỗi realtime.
-    - Login và mở modal đổi mật khẩu.
-    - Nhập mật khẩu mới chỉ có chữ, không có số.
-    - Assert: Lỗi thiếu chữ số hiện ngay dưới ô mật khẩu mới.
-    """
+
     open_change_password_after_login(driver)
 
     click_css(driver, "#newPassword").send_keys("NewPass")
@@ -180,12 +149,7 @@ def test_change_password_missing_number_realtime(driver):
 
 
 def test_change_password_missing_lowercase_realtime(driver):
-    """
-    TC-16: Mật khẩu mới thiếu chữ thường hiển thị lỗi realtime.
-    - Login và mở modal đổi mật khẩu.
-    - Nhập mật khẩu mới chỉ có chữ hoa và số.
-    - Assert: Lỗi thiếu chữ thường hiện ngay dưới ô mật khẩu mới.
-    """
+
     open_change_password_after_login(driver)
 
     click_css(driver, "#newPassword").send_keys("NEWPASS123")
@@ -195,12 +159,7 @@ def test_change_password_missing_lowercase_realtime(driver):
 
 
 def test_change_password_missing_uppercase_realtime(driver):
-    """
-    TC-17: Mật khẩu mới thiếu chữ hoa hiển thị lỗi realtime.
-    - Login và mở modal đổi mật khẩu.
-    - Nhập mật khẩu mới chỉ có chữ thường và số.
-    - Assert: Lỗi thiếu chữ hoa hiện ngay dưới ô mật khẩu mới.
-    """
+
     open_change_password_after_login(driver)
 
     click_css(driver, "#newPassword").send_keys("newpass123")
