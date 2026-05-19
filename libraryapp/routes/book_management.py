@@ -39,7 +39,7 @@ def add_book_process():
     avatar = request.files.get("avatar")
     ##
 
-    # Validation
+
     if not title:
         flash("Tên sách không được để trống!", "danger")
         return redirect("/book")
@@ -64,7 +64,7 @@ def add_book_process():
             flash("Số lượng phải lớn hơn 0!", "danger")
             return redirect("/book")
 
-        # Thêm sách
+
         success, result = add_book(
             title=title,
             author=author,

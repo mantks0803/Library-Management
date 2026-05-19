@@ -4,7 +4,7 @@ from unittest.mock import MagicMock
 
 from libraryapp import db
 from libraryapp.dao.borrow_history import count_reader_borrowing_books, get_all_reader_borrow_details, \
-    get_borrow_slip_details, get_borrow_slip, get_reader_borrow_slips
+    get_borrow_slip_details, get_reader_borrow_slips
 from libraryapp.models import BorrowSlip, BorrowSlipDetail, Book, BorrowSlipStatus, UserRole, ReaderStatus, Reader, User
 from libraryapp.test.test_base import test_session, test_app, sample_reader, sample_books_borrow, sample_slip,\
     sample_slip_pending, sample_borrow_details, test_client

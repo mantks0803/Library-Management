@@ -8,7 +8,6 @@ def validate_password(password, confirm_password=None):
     if len(password) < 6:
         return False, "Mật khẩu phải có ít nhất 6 ký tự!"
 
-    # Check có số
     if not re.search(r"[0-9]", password):
         return False, "Mật khẩu phải chứa ít nhất một chữ số!"
 
@@ -18,7 +17,6 @@ def validate_password(password, confirm_password=None):
     if not re.search(r"[A-Z]", password):
         return False, "Mật khẩu phải chứa ít nhất một chữ hoa!"
 
-    # Check xác nhận mật khẩu
     if confirm_password and password != confirm_password:
         return False, "Mật khẩu xác nhận không khớp!"
 
@@ -45,6 +43,7 @@ def add_user(name, phone, email, username, password, confirm):
         raise ValueError("Số điện thoại không hợp lệ!")
 
     valid, msg = validate_password(password, confirm)
+
     if not valid:
         raise ValueError(msg)
 
