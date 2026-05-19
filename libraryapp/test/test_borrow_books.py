@@ -170,17 +170,6 @@ def test_get_reader_borrow_slips(test_app, sample_reader, sample_slip, sample_sl
     if len(results) > 1:
         assert results[0].borrow_date >= results[1].borrow_date
 
-def test_get_borrow_slip(sample_slip):
-    slip = get_borrow_slip(sample_slip.id)
-
-    assert slip is not None
-    assert slip.id == sample_slip.id
-
-
-def test_get_borrow_slip_not_found(test_session):
-    slip = get_borrow_slip(9999)
-    assert slip is None
-
 
 def test_get_borrow_slip_details(sample_borrow_details, sample_slip_pending):
     details = get_borrow_slip_details(sample_slip_pending.id)

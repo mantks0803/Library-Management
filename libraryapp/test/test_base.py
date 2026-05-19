@@ -3,13 +3,20 @@ from datetime import datetime, timedelta
 
 import pytest
 from flask import Flask
+from flask_login import LoginManager
 from libraryapp import db
+from libraryapp.dao import books
 from libraryapp.models import Book, User, Reader, BorrowSlip, BorrowSlipStatus, BorrowSlipDetail, UserRole, ReaderStatus
+from libraryapp.routes import borrow_cart, book_detail
 from libraryapp.routes.book_detail import book_bp
+from libraryapp.routes.book_management import book_management_bp
 from libraryapp.routes.borrow_cart import borrow_bp
 from libraryapp.routes.borrow_history import history_bp
 from libraryapp.routes.home import home_bp
-
+from libraryapp.routes.login_logout import login_logout_bp
+from libraryapp.routes.return_slips import return_slips_bp
+from libraryapp.routes.slip_management import slip_management_bp
+from libraryapp.utils import hash_password
 
 def create_app():
     app = Flask(__name__)
@@ -18,12 +25,23 @@ def create_app():
     app.config['TESTING'] = True
     app.secret_key = 'fufe8fehf8fe8wkjldvdbnmfsl'
     db.init_app(app)
+    login = LoginManager(app)
+
+    @login.user_loader
+    def load_user(user_id):
+        from libraryapp.dao.users import get_current_user
+        return get_current_user(user_id)
+
     from libraryapp.routes import register
     app.register_blueprint(home_bp)
+    app.register_blueprint(login_logout_bp)
     app.register_blueprint(register.register_bp)
     app.register_blueprint(borrow_bp)
     app.register_blueprint(book_bp)
     app.register_blueprint(history_bp)
+    app.register_blueprint(return_slips_bp)
+    app.register_blueprint(book_management_bp)
+    app.register_blueprint(slip_management_bp)
     return app
 
 @pytest.fixture
