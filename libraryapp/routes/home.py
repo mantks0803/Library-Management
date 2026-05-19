@@ -16,7 +16,6 @@ home_bp = Blueprint('home', __name__)
 
 @home_bp.route('/')
 def home():
-    check_and_update_overdue_slips()
     remaining_overdue = 0
 
     if current_user.is_authenticated:
@@ -24,6 +23,7 @@ def home():
         reader = get_reader(user.id)
 
         if reader:
+            check_and_update_overdue_slips(reader.id)
             remaining_overdue = len(get_borrow_slip_status_overdue(reader.id))
 
     keyword = request.args.get("keyword")

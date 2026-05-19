@@ -55,7 +55,8 @@ def confirm():
     reader = Reader.query.get(current_user.id)
 
     # 0. Cập nhật trạng thái OVERDUE tự động
-    check_and_update_overdue_slips()
+    if reader:
+        check_and_update_overdue_slips(reader.id)
 
     # 1. Kiểm tra tài khoản có bị khóa không
     if not reader or reader.status.name == 'LOCKED':
