@@ -16,7 +16,7 @@ def update_infor_users(id):
     except Exception as ex:
         return jsonify({"ok": False, "error": str(ex)})
 
-#man
+
 @api_users_bp.route('/api/users/change-password', methods=['PUT'])
 @permission()
 def change_password_api():

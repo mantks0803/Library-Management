@@ -10,10 +10,6 @@ CART_SESSION_KEY = 'borrow_cart'
 
 
 def _get_cart_key():
-    """
-    Lấy session key duy nhất cho từng user
-    Đảm bảo mỗi user có giỏ riêng
-    """
     if current_user.is_authenticated:
         return f"{CART_SESSION_KEY}_{current_user.id}"
     return CART_SESSION_KEY
@@ -31,10 +27,6 @@ def save_cart(cart):
 
 
 def clear_cart():
-    """
-    Plain function để xóa giỏ (dùng cho logout)
-    Không có decorator permission để tất cả user đều gọi được
-    """
     cart_key = _get_cart_key()
     session.pop(cart_key, None)
     session.modified = True
@@ -91,7 +83,6 @@ def remove_from_cart(book_id):
     "access": True
 })
 def clear_cart_api():
-    """API endpoint để xóa giỏ (dùng cho frontend)"""
     clear_cart()
     return jsonify({'success': True, 'message': 'Giỏ mượn đã được xóa!'})
 

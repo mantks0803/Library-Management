@@ -19,14 +19,14 @@ class UserRole(enum.Enum):
     READER = 2
 
 class ReaderStatus(enum.Enum):
-    ACTIVE = 1  # Hoạt động
-    LOCKED = 2  # Bị khóa
+    ACTIVE = 1
+    LOCKED = 2
 
 class BorrowSlipStatus(enum.Enum):
-    BORROWING = 1  # Đang mượn
-    RETURNED = 2   # Đã trả
-    OVERDUE = 3    # Quá hạn
-    PENDING = 4 #DANG CHO
+    BORROWING = 1
+    RETURNED = 2
+    OVERDUE = 3
+    PENDING = 4
 
 class User(BaseModel, UserMixin):
     __tablename__ = 'user'
@@ -618,7 +618,3 @@ def init_all_data():
         create_user_base("Dương Quốc Bảo", "0848482273", "ndqba@gmail.com", "ndqbao1", "Abc1234@", UserRole.READER)
         db.session.commit()
 
-
-# if __name__ == "__main__":
-#    create_db()
-#    init_all_data()

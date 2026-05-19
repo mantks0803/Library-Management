@@ -89,7 +89,7 @@ def check_and_update_overdue_slips():
     try:
         now = datetime.now().date()
 
-        # Tìm tất cả phiếu BORROWING mà due_date < hôm nay
+
         overdue_slips = BorrowSlip.query.filter(
             and_(
                 BorrowSlip.status.in_([
@@ -100,13 +100,13 @@ def check_and_update_overdue_slips():
             )
         ).all()
 
-        PENALTY_PER_DAY = 10000  # 10,000đ/ngày quá hạn
+        PENALTY_PER_DAY = 10000
 
         for slip in overdue_slips:
             overdue_days = (now - slip.due_date.date()).days
             penalty_fee = overdue_days * PENALTY_PER_DAY
 
-            # Cập nhật status và phí phạt
+
             slip.status = BorrowSlipStatus.OVERDUE
             slip.penalty_fee = penalty_fee
 
@@ -117,11 +117,11 @@ def check_and_update_overdue_slips():
 
         if overdue_slips:
             db.session.commit()
-            print(f"✓ Cập nhật {len(overdue_slips)} phiếu quá hạn")
+            print(f"Cập nhật {len(overdue_slips)} phiếu quá hạn")
 
         return len(overdue_slips)
 
     except Exception as e:
         db.session.rollback()
-        print(f"✗ Lỗi khi cập nhật quá hạn: {e}")
+        print(f"Lỗi khi cập nhật quá hạn: {e}")
         return 0
