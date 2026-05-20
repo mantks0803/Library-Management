@@ -131,7 +131,7 @@ def test_add_book_missing_type_redirects(test_client, admin_user, mocker):
 
 def test_add_book_invalid_file_renders_error(test_client, admin_user, mocker):
     login_as(test_client, admin_user)
-    mock_render = mocker.patch("libraryapp.routes.book_management.render_template", return_value="invalid file")
+    mock_add = mocker.patch("libraryapp.routes.book_management.add_book")
 
     response = test_client.post(
         "/book/add",
@@ -144,10 +144,9 @@ def test_add_book_invalid_file_renders_error(test_client, admin_user, mocker):
         content_type="multipart/form-data",
     )
 
-    assert response.status_code == 200
-    args, kwargs = mock_render.call_args
-    assert args == ("admin/book_management.html",)
-    assert "err_msg" in kwargs
+    assert response.status_code == 302
+    assert response.headers["Location"].endswith("/book")
+    mock_add.assert_not_called()
 
 
 def test_add_book_quantity_less_than_one_redirects(test_client, admin_user, mocker):

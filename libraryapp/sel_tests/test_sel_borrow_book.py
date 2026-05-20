@@ -1,10 +1,17 @@
 from selenium.webdriver.common.by import By
+
+from libraryapp.sel_tests.pages import BookPage
 from libraryapp.sel_tests.pages.BookDetailPage import BookDetailPage
+from libraryapp.sel_tests.pages.BookPage import BookPage1
 from libraryapp.sel_tests.pages.CartPage import CartPage
 from libraryapp.sel_tests.pages.HistoryBorrowPage import HistoryBorrowPage
 from libraryapp.sel_tests.pages.HomePage import HomePage
 from libraryapp.sel_tests.pages.LoginPage import LoginPage
+from libraryapp import app, db
+from libraryapp.models import Book, Reader, ReaderStatus, User, UserRole
+from libraryapp.utils import hash_password
 import time
+
 
 
 def test_add_book_to_cart_success(driver):
@@ -208,6 +215,23 @@ def test_borrow_6th_book(driver):
     assert warning is not None
 
 
+def test_borrow_book_locked_account(driver):
+    """
+    TC: Tài khoản reader bị khóa không thể xác nhận mượn sách.
+    """
+
+    login_page = LoginPage(driver=driver)
+
+    login_page.open_page()
+    login_page.login("user1", "123")
+
+    book_page = BookPage.BookPage1(driver=driver)
+    book_page.open_page()
+
+    time.sleep(1)
+
+    alert = driver.find_element(By.CSS_SELECTOR, 'div.d-flex.gap-3.mt-5 > button')
+    assert "TÀI KHOẢN READER BỊ KHÓA" in alert.text
 
 
 

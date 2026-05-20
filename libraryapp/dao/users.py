@@ -23,6 +23,27 @@ def validate_password(password, confirm_password=None):
     return True, "OK"
 
 
+def validate_name(name):
+    if not name or not name.strip():
+        return False, "Họ tên không được để trống!"
+
+    return True, "OK"
+
+
+def validate_username(username):
+    if not username or not username.strip():
+        return False, "Tên đăng nhập không được để trống!"
+
+    return True, "OK"
+
+
+def validate_phone(phone):
+    if not phone or not re.match(r"^(01|02|03|04|05|06|07|08|09)\d{8}$", phone):
+        return False, "Số điện thoại không hợp lệ!"
+
+    return True, "OK"
+
+
 def get_current_user(user_id):
     return User.query.get(user_id)
 
@@ -31,14 +52,17 @@ def auth_user(username, password):
     return User.query.filter(User.username == username, User.password == password).first()
 
 def add_user(name, phone, email, username, password, confirm):
-    if not name or not name.strip():
-        raise ValueError("Họ tên không được để trống!")
+    valid, msg = validate_name(name)
+    if not valid:
+        raise ValueError(msg)
 
-    if not username or not username.strip():
-        raise ValueError("Tên đăng nhập không được để trống!")
+    valid, msg = validate_username(username)
+    if not valid:
+        raise ValueError(msg)
 
-    if not phone or not re.match(r"^(01|02|03|04|05|06|07|08|09)\d{8}$", phone):
-        raise ValueError("Số điện thoại không hợp lệ!")
+    valid, msg = validate_phone(phone)
+    if not valid:
+        raise ValueError(msg)
 
     valid, msg = validate_password(password, confirm)
 
@@ -70,10 +94,17 @@ def add_user(name, phone, email, username, password, confirm):
 
 def update_user(user_id, name, phone):
     user = User.query.get(user_id)
-    if not re.match(r'^0\d{9}$', phone):
-        raise ValueError("Số điện thoại không hợp lệ!")
-    user.name = name
-    user.phone = phone
+
+    valid, msg = validate_name(name)
+    if not valid:
+        raise ValueError(msg)
+
+    valid, msg = validate_phone(phone)
+    if not valid:
+        raise ValueError(msg)
+
+    user.name = name.strip()
+    user.phone = phone.strip()
     db.session.commit()
 
 
