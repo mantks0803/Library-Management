@@ -50,8 +50,14 @@ def create_borrow_slip_multiple(reader_id, book_ids, borrow_date=None, days=7):
         return None, []
 
 
-def request_return_borrow_slip(slip_id):
+def request_return_borrow_slip(slip_id, current_reader_id):
     slip = BorrowSlip.query.get(slip_id)
+    if not slip:
+        return False, "Phiếu không hợp lệ!"
+
+    if slip.reader_id != current_reader_id:
+        return False, "Bạn không có quyền trả phiếu mượn này!"
+
     if slip and slip.status != BorrowSlipStatus.RETURNED:
         slip.status = BorrowSlipStatus.PENDING
         db.session.commit()
