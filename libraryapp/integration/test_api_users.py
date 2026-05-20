@@ -36,6 +36,26 @@ def test_update_user_invalid_phone_returns_error_json(test_client, reader_user):
     assert "Số điện thoại không hợp lệ" in data["error"]
 
 
+def test_update_user_empty_name_returns_error_json(test_client, reader_user):
+    from libraryapp.integration.conftest import login_as
+
+    login_as(test_client, reader_user)
+
+    response = test_client.put(
+        f"/api/users/{reader_user.id}",
+        data={"name": "", "phone": "0912345678"},
+    )
+
+    data = response.get_json()
+    assert response.status_code == 200
+    assert data["ok"] is False
+    assert "Họ tên không được để trống" in data["error"]
+
+    updated_user = User.query.get(reader_user.id)
+    assert updated_user.name == reader_user.name
+    assert updated_user.phone == reader_user.phone
+
+
 def test_update_user_requires_login(test_client, reader_user):
     response = test_client.put(
         f"/api/users/{reader_user.id}",
