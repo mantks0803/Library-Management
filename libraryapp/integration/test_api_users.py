@@ -56,6 +56,26 @@ def test_update_user_empty_name_returns_error_json(test_client, reader_user):
     assert updated_user.phone == reader_user.phone
 
 
+def test_update_user_cannot_update_another_user(test_client, reader_user, admin_user):
+    from libraryapp.integration.conftest import login_as
+
+    login_as(test_client, reader_user)
+
+    response = test_client.put(
+        f"/api/users/{admin_user.id}",
+        data={"name": "Hacked Name", "phone": "0912345678"},
+    )
+
+    data = response.get_json()
+    assert response.status_code == 403
+    assert data["ok"] is False
+    assert "Không có quyền cập nhật người dùng này" in data["error"]
+
+    updated_user = User.query.get(admin_user.id)
+    assert updated_user.name == admin_user.name
+    assert updated_user.phone == admin_user.phone
+
+
 def test_update_user_requires_login(test_client, reader_user):
     response = test_client.put(
         f"/api/users/{reader_user.id}",

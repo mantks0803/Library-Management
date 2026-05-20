@@ -9,6 +9,9 @@ api_users_bp = Blueprint('api_users', __name__)
 @permission()
 def update_infor_users(id):
     try:
+        if current_user.id != id:
+            return jsonify({"ok": False, "error": "Không có quyền cập nhật người dùng này!"}), 403
+
         name = request.form.get("name")
         phone = request.form.get("phone")
         users.update_user(id, name, phone)
