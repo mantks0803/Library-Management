@@ -128,6 +128,30 @@ def test_clear_cart_success(test_client, reader_user, sample_books):
     assert test_client.get("/cart/count").get_json() == {"count": 0}
 
 
+def test_confirm_cart_returns_error_when_book_becomes_out_of_stock(test_client, test_session, reader_user, sample_books):
+    from libraryapp.integration.conftest import login_as
+    from libraryapp.models import BorrowSlip, BorrowSlipDetail
+
+    login_as(test_client, reader_user)
+    book = sample_books[0]
+
+    add_response = test_client.post(f"/cart/add/{book.id}")
+    assert add_response.get_json()["success"] is True
+
+    book.quantity = 0
+    test_session.commit()
+
+    response = test_client.post("/cart/confirm")
+
+    data = response.get_json()
+    assert response.status_code == 200
+    assert data["success"] is False
+    assert "hết" in data["message"]
+    assert BorrowSlip.query.filter_by(reader_id=reader_user.id).count() == 0
+    assert BorrowSlipDetail.query.count() == 0
+    assert test_client.get("/cart/count").get_json() == {"count": 1}
+
+
 def test_cart_api_forbidden_for_admin(test_client, admin_user, sample_books):
     from libraryapp.integration.conftest import login_as
 

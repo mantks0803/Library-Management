@@ -30,7 +30,7 @@ def create_borrow_slip_multiple(reader_id, book_ids, borrow_date=None, days=7):
         for book_id in book_ids:
             book = Book.query.get(book_id)
             if not book or book.quantity <= 0:
-                continue
+                raise ValueError("Sách đã hết!")
 
             borrow_slip_detail = BorrowSlipDetail(
                 borrow_slip_id=borrow_slip.id,
