@@ -105,30 +105,39 @@ def test_detail_persisted_in_db(test_session, sample_reader, sample_books_borrow
     assert db_details[0].book_id == book_a.id
 
 
-def test_book_with_zero_quantity_skipped(test_session, sample_reader, sample_books_borrow):
+def test_book_with_zero_quantity_fails_entire_borrow_slip(test_session, sample_reader, sample_books_borrow):
     book_a = sample_books_borrow[0]
     book_c = sample_books_borrow[2]
+    original_book_a_quantity = book_a.quantity
+
     slip, details = create_borrow_slip_multiple(
         reader_id=sample_reader.id, book_ids=[book_a.id, book_c.id]
     )
-    assert len(details) == 1
-    assert details[0].book_id == book_a.id
+
+    assert slip is None
+    assert details == []
+    assert Book.query.get(book_a.id).quantity == original_book_a_quantity
     assert Book.query.get(book_c.id).quantity == 0
+    assert BorrowSlip.query.filter_by(reader_id=sample_reader.id).count() == 0
 
 
-def test_all_books_out_of_stock_returns_empty_details(test_session, sample_reader, sample_books_borrow):
+def test_all_books_out_of_stock_returns_no_slip(test_session, sample_reader, sample_books_borrow):
     book_c = sample_books_borrow[2]
     slip, details = create_borrow_slip_multiple(
         reader_id=sample_reader.id, book_ids=[book_c.id]
     )
+    assert slip is None
     assert details == []
+    assert BorrowSlip.query.filter_by(reader_id=sample_reader.id).count() == 0
 
 
-def test_nonexistent_book_id_skipped(test_session, sample_reader):
+def test_nonexistent_book_id_returns_no_slip(test_session, sample_reader):
     slip, details = create_borrow_slip_multiple(
         reader_id=sample_reader.id, book_ids=[99999]
     )
+    assert slip is None
     assert details == []
+    assert BorrowSlip.query.filter_by(reader_id=sample_reader.id).count() == 0
 
 
 from libraryapp import db

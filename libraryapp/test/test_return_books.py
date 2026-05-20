@@ -10,7 +10,7 @@ from libraryapp.test.test_base import sample_slip, sample_slip_pending, sample_b
     sample_slip_borrowing, sample_details_return, sample_reader, sample_books_borrow
 
 def test_request_return_success(test_session, sample_slip):
-    ok, msg = request_return_borrow_slip(sample_slip.id)
+    ok, msg = request_return_borrow_slip(sample_slip.id, sample_slip.reader_id)
 
     assert ok is True
     assert "Đã gửi yêu cầu trả sách. Vui lòng đợi Admin duyệt!" in msg
@@ -22,10 +22,17 @@ def test_request_return_already_returned(test_session, sample_slip):
     sample_slip.status = BorrowSlipStatus.RETURNED
     test_session.commit()
 
-    ok, msg = request_return_borrow_slip(sample_slip.id)
+    ok, msg = request_return_borrow_slip(sample_slip.id, sample_slip.reader_id)
 
     assert ok is False
     assert msg == "Phiếu không hợp lệ!"
+
+def test_request_return_wrong_user(test_session, sample_slip):
+    ok, msg = request_return_borrow_slip(sample_slip.id, current_reader_id=999)
+
+    assert ok is False
+    assert "không có quyền" in msg
+    assert BorrowSlip.query.get(sample_slip.id).status == BorrowSlipStatus.BORROWING
 
 def test_confirm_return_success(test_session, sample_slip_pending, sample_borrow_details):
     book_id = sample_borrow_details[0].book_id

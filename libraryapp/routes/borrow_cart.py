@@ -87,6 +87,19 @@ def confirm():
             'message': f'Bạn chỉ được mượn tối đa 5 quyển sách! Hiện tại bạn đang mượn {borrowing_count} quyển, thêm {len(cart)} quyển sẽ vượt quá giới hạn.'
         })
 
+    for book_id in cart:
+        book = get_book(book_id)
+        if not book:
+            return jsonify({
+                'success': False,
+                'message': 'Lỗi khi tạo phiếu mượn. Vui lòng thử lại sau!'
+            })
+
+        if book.quantity <= 0:
+            return jsonify({
+                'success': False,
+                'message': 'Sách đã hết!'
+            })
 
     borrow_slip, details = create_borrow_slip_multiple(
         reader_id=reader.id,
@@ -94,7 +107,7 @@ def confirm():
         days=7
     )
 
-    if borrow_slip:
+    if borrow_slip and details:
         save_cart([])
         return jsonify({
             'success': True,

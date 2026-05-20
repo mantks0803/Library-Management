@@ -65,5 +65,5 @@ def render_borrow_history():
 @history_bp.route('/api/return-slip/<int:slip_id>', methods=['POST'])
 @permission(allow={"roles": [UserRole.READER], "access": True})
 def api_return_slip(slip_id):
-    success, message = request_return_borrow_slip(slip_id)
+    success, message = request_return_borrow_slip(slip_id, current_user.id)
     return jsonify({'success': success, 'message': message})
