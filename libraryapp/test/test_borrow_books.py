@@ -140,6 +140,13 @@ def test_nonexistent_book_id_returns_no_slip(test_session, sample_reader):
     assert BorrowSlip.query.filter_by(reader_id=sample_reader.id).count() == 0
 
 
+def test_request_return_missing_slip_returns_error(test_session, sample_reader):
+    success, message = request_return_borrow_slip(99999, sample_reader.id)
+
+    assert success is False
+    assert message
+
+
 from libraryapp import db
 from libraryapp.dao.borrow_slips import create_borrow_slip_multiple
 
@@ -369,12 +376,15 @@ def test_confirm_exceed_limit(test_session,test_client, mocker, sample_reader):
 
 def test_confirm_create_slip_system_error(test_session, test_client, mocker, sample_reader):
     u = sample_reader
+    book = Book(title="A", author="C", type="CS", quantity=1)
+    test_session.add(book)
+    test_session.commit()
 
     mocker.patch('flask_login.utils._get_user', return_value=u)
     mocker.patch('libraryapp.routes.borrow_cart.current_user', u)
     mocker.patch('libraryapp.utils.current_user', u)
 
-    mocker.patch('libraryapp.routes.borrow_cart.get_cart', return_value=[101])
+    mocker.patch('libraryapp.routes.borrow_cart.get_cart', return_value=[book.id])
     mocker.patch('libraryapp.routes.borrow_cart.count_reader_borrowing_books', return_value=0)
 
     mocker.patch('libraryapp.routes.borrow_cart.create_borrow_slip_multiple',return_value=(None, None))
@@ -387,6 +397,26 @@ def test_confirm_create_slip_system_error(test_session, test_client, mocker, sam
     assert data['success'] is False
     assert 'Lỗi khi tạo phiếu mượn' in data['message']
 
+    assert BorrowSlip.query.filter_by(reader_id=u.id).count() == 0
+
+
+def test_confirm_missing_book_returns_error(test_session, test_client, mocker, sample_reader):
+    u = sample_reader
+
+    mocker.patch('flask_login.utils._get_user', return_value=u)
+    mocker.patch('libraryapp.routes.borrow_cart.current_user', u)
+    mocker.patch('libraryapp.utils.current_user', u)
+
+    mocker.patch('libraryapp.routes.borrow_cart.get_cart', return_value=[99999])
+    mocker.patch('libraryapp.routes.borrow_cart.count_reader_borrowing_books', return_value=0)
+
+    res = test_client.post('/cart/confirm')
+
+    assert res.status_code == 200
+    data = res.get_json()
+
+    assert data['success'] is False
+    assert data['message']
     assert BorrowSlip.query.filter_by(reader_id=u.id).count() == 0
 
 def test_load_book_detail(test_session, test_client, mocker, sample_reader):
