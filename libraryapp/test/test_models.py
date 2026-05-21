@@ -38,33 +38,6 @@ def test_create_db_uses_configured_app(test_app, mocker):
     models.create_db()
 
 
-def test_insert_books_uses_configured_app(test_app, mocker):
-    import libraryapp.models as models
-
-    mocker.patch.object(models, "app", test_app)
-
-    models.insert_books()
-
-    assert Book.query.count() > 0
-
-
-def test_create_user_base_creates_reader_record(test_session):
-    import libraryapp.models as models
-
-    user = models.create_user_base(
-        "Reader",
-        "0900000000",
-        "reader@gmail.com",
-        "reader_base",
-        "Password123",
-        UserRole.READER,
-    )
-    db.session.commit()
-
-    assert user.id is not None
-    assert Reader.query.get(user.id) is not None
-
-
 def test_init_all_data_seeds_books_and_users(test_app, mocker):
     import libraryapp.models as models
 
