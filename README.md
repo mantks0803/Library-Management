@@ -1,59 +1,58 @@
-# BÀI TẬP LỚN MÔN KIỂM THỬ PHẦN MỀM
+# Software Testing Course Project
 
-## Nhóm 05
+## Group 05
 
-| MSSV       | Họ và Tên             |
-| ---------- | --------------------- |
-| 2351050100 | Nguyễn Thanh Mẫn      |
-| 2351050012 | Nguyễn Dương Quốc Bảo |
-| 2351010203 | Nguyễn Thanh Thuận    |
-
----
-
-## Đề tài
-
-ĐỀ TÀI 05: HỆ THỐNG QUẢN LÝ THƯ VIỆN
+| Student ID | Full Name | Role |
+|------------|-----------|------|
+| 2351050100 | Nguyen Thanh Man | Team Leader |
+| 2351050012 | Nguyen Duong Quoc Bao | Member |
+| 2351010203 | Nguyen Thanh Thuan | Member |
 
 ---
 
-## Mô tả
+## Project Topic
 
-Hệ thống cho phép người dùng thực hiện các chức năng:
-
-* Tìm kiếm sách
-* Mượn sách
-* Trả sách
+**Topic 05: Library Management System**
 
 ---
 
-## Mục tiêu
+## Project Description
 
-* Áp dụng kiến thức kiểm thử phần mềm
-* Xây dựng hệ thống quản lý thư viện cơ bản
-* Thực hiện kiểm thử chức năng và kiểm thử đơn vị
-* Thực hiện kiểm thử với SELENIUM
+The system allows users to perform the following functions:
 
----
-
-## Công nghệ sử dụng
-
-* Python (Flask)
-* MySQL
-* Git và GitHub
+- Search for books
+- Borrow books
+- Return books
 
 ---
 
-## Chức năng chính
+## Objectives
 
-1. Mượn sách
-2. Trả sách
-3. Tìm kiếm sách
-4. Quản lý sách (Admin)
-5. Quản lý người dùng (Admin)
+- Apply software testing concepts and techniques.
+- Develop a basic Library Management System.
+- Perform functional testing and unit testing.
+- Conduct automated testing using Selenium.
 
 ---
 
-## Ghi chú
+## Technologies Used
 
-Dự án là BÀI TẬP LỚN phục vụ cho môn: Kiểm thử phần mềm
+- Python (Flask)
+- MySQL
+- Git & GitHub
 
+---
+
+## Main Features
+
+1. Borrow Books
+2. Return Books
+3. Search Books
+4. Book Management (Admin)
+5. User Management (Admin)
+
+---
+
+## Notes
+
+This project was developed as the **Software Testing** course project.
